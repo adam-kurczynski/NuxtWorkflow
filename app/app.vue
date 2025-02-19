@@ -3,8 +3,13 @@ useSeoMeta({
   title: 'NuxtHub Starter',
   description: 'A Nuxt template to build your full-stack application on the edge.'
 })
-</script>
 
+</script>
 <template>
-  <NuxtPage />
+  <div>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+    <UNotifications />
+  </div>
 </template>

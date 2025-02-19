@@ -1,5 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ui: {
+    notifications: {
+      position: 'top-0',
+    }
+  },
   compatibilityDate: '2024-07-30',
   // Nuxt 4 directory structure and features
   // https://nuxt.com/docs/getting-started/upgrade#testing-nuxt-4
@@ -8,7 +13,13 @@ export default defineNuxtConfig({
   // https://nuxt.com/modules
   modules: [
     '@nuxthub/core',
-    '@nuxt/eslint'
+    '@nuxt/eslint',
+    'nuxt-auth-utils',
+    '@nuxt/ui',
+    '@nuxt/icon',
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/color-mode',
+    '@samk-dev/nuxt-vcalendar',
   ],
   hub: {
     database: true,
