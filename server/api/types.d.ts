@@ -21,6 +21,7 @@ users: {
     firstName: string;
     lastName: string;
     createdAt: Date;
+    name: string;
 } | null;
 };
 
@@ -31,4 +32,12 @@ export type User = {
     username: string;
     name: string;
     role: string;
+}
+
+export type Asset = {
+    id: number;
+    name: string;
+    description: string;
+    unit: string;
+    createdAt: Date;
 }

@@ -33,7 +33,7 @@ export const assets = sqliteTable('assets', {
   name: text('name').notNull(),
   description: text('description'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-  unit: text('unit').notNull(),
+  unit: text('unit').notNull()
 })
 
 export const assetUsage = sqliteTable('asset_usage', {

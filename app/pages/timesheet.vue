@@ -16,7 +16,7 @@
       <p>Brak zalogowanych godzin w tym dniu</p>
     </UCard>
     <UButton icon="i-material-symbols-add-2" @click="openForm"
-      class="fixed bottom-20 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
+      class="fixed bottom-24 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
     <UModal v-model="isOpen">
       <div class="p-4">
         <h1 class="text-2xl font-bold">Dodaj godziny</h1>
@@ -59,15 +59,23 @@ import checkTimes from "~~/utils/checkTimes";
 
 const isOpen = ref(false);
 const currMonth = ref(new Date());
+const queryStartDate = ref(getFirstAndLastDay(new Date()).firstDay)
+const queryEndDate = ref(getFirstAndLastDay(new Date()).lastDay)
 const currDate = ref();
 const attrs = ref([] as AttributeConfig[]);
 const dayLogs = ref([] as TimelogResponse[]);
 const toast = useToast();
 const { user } = useUserSession()
 
-const { data: monthLogs, refresh: refreshMonth } = await useFetch<TimelogResponse[]>(`/api/timesheet?startTime=${getFirstAndLastDay(currMonth.value).firstDay}&endTime=${getFirstAndLastDay(currMonth.value).lastDay}`, {
+const { data: monthLogs, refresh: refreshMonth } = await useFetch<TimelogResponse[]>(`/api/timesheet`, {
+  query: {
+    userId: user.value.id,
+    startTime: queryStartDate,
+    endTime: queryEndDate
+  },
   onResponse({ response }) {
     attrs.value = response._data.map((item: TimelogResponse) => {
+
       return {
         key: item.user_timelog.id,
         dot: "success",
@@ -75,7 +83,6 @@ const { data: monthLogs, refresh: refreshMonth } = await useFetch<TimelogRespons
       }
     })
   },
-  watch: [currMonth],
   server: false
 });
 
@@ -151,7 +158,10 @@ function monthChanged(pages: Page[]) {
   if (!pages || pages.length === 0 || !pages[0]) {
     return;
   }
-  currMonth.value = new Date(pages[0].year, pages[0].month, 1);
+  console.log("monthChanged", pages[0]);
+  currMonth.value = new Date(pages[0].year, pages[0].month - 1, 1);
+  queryStartDate.value = getFirstAndLastDay(currMonth.value).firstDay;
+  queryEndDate.value = getFirstAndLastDay(currMonth.value).lastDay;
 }
 
 function dayChanged(day: CalendarDay) {

@@ -1,6 +1,8 @@
 export default eventHandler(async (event) => {
   const { startTime, endTime, projectId, userId } = await readBody(event)
   //check if timesheet doeasn't collide with existing timesheet
+  console.log('startTime', startTime)
+  console.log('endTime', endTime)
   const timesheets = await useDrizzle()
   .select()
   .from(tables.userTimelog)
@@ -11,6 +13,7 @@ export default eventHandler(async (event) => {
       between(tables.userTimelog.endTime, new Date(startTime), new Date(endTime))
     )
   )).all()
+  console.log('timesheets', timesheets)
 
   if (timesheets.length > 0) {
     throw  createError({

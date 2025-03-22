@@ -48,7 +48,7 @@ const { user } = useUserSession();
 type Schema = InferType<typeof schema>;
 
 
-const { data } = await useFetch(`/api/timesheet?startTime=${getFirstAndLastDay(new Date).firstDay}&endTime=${getFirstAndLastDay(new Date).lastDay}`);
+const { data, refresh } = await useFetch(`/api/timesheet?startTime=${getFirstAndLastDay(new Date).firstDay}&endTime=${getFirstAndLastDay(new Date).lastDay}`);
 const { data: projects } = await useFetch("/api/projects");
 
 const isOpen = ref(false);
@@ -80,6 +80,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       }
     });
     isOpen.value = false;
+    refresh();
   } catch (error) {
     alert(error.statusMessage || error);
   }

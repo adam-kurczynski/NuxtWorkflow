@@ -1,5 +1,5 @@
 import { drizzle } from 'drizzle-orm/d1'
-export { sql, eq, and, or, between, ilike, lt, gt } from 'drizzle-orm'
+export { sql, eq, and, or, between, like, lt, gt } from 'drizzle-orm'
 
 import * as schema from '../database/schema'
 
