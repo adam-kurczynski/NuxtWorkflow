@@ -57,6 +57,12 @@ import formatDateTime from "~~/utils/formatDateTime";
 import buildDateTime from "~~/utils/buildDateTime";
 import checkTimes from "~~/utils/checkTimes";
 
+definePageMeta({
+  title: "Twój kalendarz",
+  description: "Timesheet",
+  middleware: ["auth"],
+})
+
 const isOpen = ref(false);
 const currMonth = ref(new Date());
 const queryStartDate = ref(getFirstAndLastDay(new Date()).firstDay)

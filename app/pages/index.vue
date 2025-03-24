@@ -43,6 +43,14 @@ import buildTodayDate from "~~/utils/buildTodayDate";
 import parseDecimalToTime from "~~/utils/parseDecimalToTime";
 import type { TimelogResponse } from "~~/server/api/types";
 
+definePageMeta({
+  title: "Home",
+  description: "Dashboard page",
+  name: "dashboard",
+  layout: "default",
+  middleware: "auth"
+})
+
 const { user } = useUserSession();
 
 type Schema = InferType<typeof schema>;

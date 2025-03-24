@@ -41,3 +41,38 @@ export type Asset = {
     unit: string;
     createdAt: Date;
 }
+
+export type AssetUsageResponse = {
+    asset_usage: {
+        id: number;
+        assetId: number;
+        projectId: number;
+        quantity: number;
+        createdAt: Date;
+        addedBy: number;
+    };
+    assets: {
+        id: number;
+        name: string;
+        description: string;
+        unit: string;
+        createdAt: Date;
+    } | null;
+    projects: {
+        id: number;
+        name: string;
+        description: string;
+        clientId: number;
+        createdAt: Date;
+        status: string;
+    } | null;
+    users: {
+        id: number;
+        email: string;
+        firstName: string;
+        lastName: string;
+        createdAt: Date;
+        name: string;
+    } | null;
+
+}

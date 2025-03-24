@@ -40,6 +40,13 @@
 import { ref, reactive } from "vue";
 import { object, string, number, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
+
+definePageMeta({
+  title: "Projekty",
+  description: "Projekty",
+  middleware: ["auth"],
+})
+
 const { data, refresh } = await useFetch("/api/projects");
 const { data: clients } = await useFetch("/api/clients");
 const isOpen = ref(false);
