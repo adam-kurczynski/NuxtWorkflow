@@ -28,8 +28,15 @@ definePageMeta({
   layout: "blank"
 })
 
-import { object, string } from 'yup'
+const { user, fetch: refreshSession } = useUserSession();
 const router = useRouter();
+
+if (user.value) {
+  router.push("/");
+}
+
+import { object, string } from 'yup'
+
 
 const state = reactive({
   username: undefined,
@@ -42,7 +49,7 @@ const loading = ref(false);
 const schema = object({
   username: string().required('Required'),
   password: string()
-    .min(6, 'Must be at least 8 characters')
+    .min(4, 'Must be at least 4 characters')
     .required('Required')
 })
 
@@ -54,15 +61,14 @@ async function onSubmit(event) {
     await $fetch("/api/auth/login", {
       method: "POST",
       body
-    });
-    console.log("Logged in");
-    router.replace({ path: '/' });
-    loading.value = false;
+    })
+    await refreshSession();
+    router.replace("/");
+
   } catch (error) {
     alert(error.statusMessage || error);
     loading.value = false;
   }
-
 
 }
 </script>

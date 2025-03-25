@@ -11,7 +11,7 @@ export default eventHandler(async (event) => {
     const assets = await useDrizzle().select().from(tables.assets).where(like(tables.assets.name, `%${name}%`)).all()
     return assets
   } catch (error) {
-    console.log('error', error)
+
   }
 
 })

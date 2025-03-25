@@ -1,5 +1,6 @@
 <template>
-  <div class="p-2">
+  <div class="p-2 space-y-4">
+    <UInput v-model="search" placeholder="Szukaj" />
     <UCard v-for="client in data" :key="client.id" class="mb-2">
       <p>{{ client.name }}</p>
       <p>{{ client.address }}</p>
@@ -40,8 +41,14 @@ definePageMeta({
   middleware: ["auth"],
 })
 
-const { data, refresh } = await useFetch("/api/clients");
+
 const isOpen = ref(false);
+const search = ref("");
+const { data, refresh } = await useFetch("/api/clients", {
+  query: {
+    search: search
+  }
+});
 
 const schema = object({
   name: string().required("Pole wymagane"),
@@ -58,7 +65,7 @@ const state = reactive({
 })
 
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
-  console.log("onSubmit", event.data);
+
   try {
     await $fetch("/api/clients", {
       method: "POST",
@@ -67,7 +74,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     isOpen.value = false;
     refresh();
   } catch (error) {
-    console.log({ error });
+
     alert(error.statusMessage || error);
   }
 }

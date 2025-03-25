@@ -5,7 +5,6 @@ export default defineEventHandler(async (event) => {
   const { username, password } = body
 
   const [user] = await useDrizzle().select().from(tables.users).where(eq(tables.users.username, username))
-    console.log(user)
   if (!user) {
     throw new Error('User not found')
   }

@@ -11,6 +11,7 @@
 const router = useRouter();
 const route = useRoute();
 const title = computed(() => route.meta.title);
+const { clear: clearUserSession } = useUserSession();
 
 
 const logout = async () => {
@@ -18,9 +19,9 @@ const logout = async () => {
     await $fetch("/api/auth/logout", {
       method: "POST",
     });
+    await clearUserSession();
     router.push({ name: 'login' })
   } catch (error) {
-    console.log({ error });
     alert(error.statusMessage || error);
   }
 };

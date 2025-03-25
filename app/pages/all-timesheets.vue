@@ -67,8 +67,8 @@ const { data: users } = await useFetch("/api/users");
 const state = reactive({
   startTime: getFirstAndLastDay(new Date()).firstDay.split('T')[0],
   endTime: getFirstAndLastDay(new Date()).lastDay.split('T')[0],
-  projectId: undefined,
-  userId: undefined
+  projectId: 0,
+  userId: 0
 });
 
 const getURL = computed(() => `api/timesheet?startTime=${state.startTime ? new Date(state.startTime).toISOString() : ''}&endTime=${state.endTime ? new Date(state.endTime).toISOString() : ''}&projectId=${state.projectId ? state.projectId : ''}&userId=${state.userId ? state.userId : ''}`)
@@ -93,9 +93,7 @@ type Schema = InferType<typeof schema>;
 
 
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
-  refresh().then(() => {
-    console.log(timesheets)
-  })
+  refresh()
 }
 
 const addEmptyValue = (name: string, list: any[]) => {

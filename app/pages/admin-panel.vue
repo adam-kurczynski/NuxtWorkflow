@@ -1,14 +1,14 @@
 <template>
   <div class="flex-col flex gap-2 p-2">
-    <UButton @click="goToTimesheet" variant="outline" icon="i-material-symbols-alarm-outline-rounded" size="xl"
-      class="gallery-item">Czasy
+    <UButton v-if="isAdmin" @click="goToTimesheet" variant="outline" icon="i-material-symbols-alarm-outline-rounded"
+      size="xl" class="gallery-item">Czasy
       pracy</UButton>
     <UButton @click="goToMaterials" variant="outline" icon="i-material-symbols-assignment-outline-rounded" size="xl"
       class="gallery-item">
       Materiały
     </UButton>
-    <UButton @click="goToEmployees" variant="outline" icon="i-material-symbols-user-attributes-outline-rounded"
-      size="xl" class="gallery-item">
+    <UButton v-if="isAdmin" @click="goToEmployees" variant="outline"
+      icon="i-material-symbols-user-attributes-outline-rounded" size="xl" class="gallery-item">
       Pracownicy
     </UButton>
     <UButton @click="goToPasswordReset" variant="outline" icon="i-material-symbols-key-vertical-outline-rounded"
@@ -19,6 +19,15 @@
 </template>
 
 <script lang="ts" setup>
+
+definePageMeta({
+  title: 'Konfiguracja',
+  description: 'Panel administracyjny',
+  middleware: 'auth',
+})
+
+const { user } = useUserSession();
+const isAdmin = user.value?.role === "admin";
 const router = useRouter();
 
 const goToTimesheet = () => {

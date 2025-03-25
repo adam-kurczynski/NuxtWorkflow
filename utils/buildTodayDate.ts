@@ -5,6 +5,6 @@ export default (time: string) => {
   today.setHours(Number(hours))
   today.setMinutes(Number(minutes))
   today.setSeconds(0)
-  console.log(today)
+  
   return today
 }

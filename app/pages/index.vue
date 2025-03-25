@@ -56,7 +56,7 @@ const { user } = useUserSession();
 type Schema = InferType<typeof schema>;
 
 
-const { data, refresh } = await useFetch(`/api/timesheet?startTime=${getFirstAndLastDay(new Date).firstDay}&endTime=${getFirstAndLastDay(new Date).lastDay}`);
+const { data, refresh } = await useFetch(`/api/timesheet?startTime=${getFirstAndLastDay(new Date).firstDay}&endTime=${getFirstAndLastDay(new Date).lastDay}&userId=${user.value.id}`);
 const { data: projects } = await useFetch("/api/projects");
 
 const isOpen = ref(false);

@@ -3,6 +3,8 @@
     <client-only>
       <VCalendar locale="pl" @did-move="monthChanged" @dayclick="dayChanged" :attributes="attrs" />
     </client-only>
+    <h1 v-if="monthLogs?.length" class="text-center">{{ parseDecimalToTime(countLoggedTime(monthLogs)) + ` zalogowanych
+      w tym miesiącu`}} </h1>
     <h1 v-if="currDate" class="text-center">{{ formatDate(currDate) }} </h1>
     <UCard v-if="dayLogs.length" v-for="log in dayLogs" :key="log.user_timelog.id" class="mb-2 relative">
       <UButton icon="i-material-symbols-delete-rounded" @click="deleteLog(log.user_timelog.id)"
@@ -56,6 +58,8 @@ import formatDate from "~~/utils/formatDate";
 import formatDateTime from "~~/utils/formatDateTime";
 import buildDateTime from "~~/utils/buildDateTime";
 import checkTimes from "~~/utils/checkTimes";
+import parseDecimalToTime from "~~/utils/parseDecimalToTime";
+import countLoggedTime from "~~/utils/countLoggedTime";
 
 definePageMeta({
   title: "Twój kalendarz",
@@ -133,7 +137,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       description: "Godziny zostały dodane",
     });
   } catch (error) {
-    console.log({ error });
+
     toast.add({
       title: "Błąd",
       description: error.statusMessage || "Nie udało się dodać godzin",
@@ -164,7 +168,6 @@ function monthChanged(pages: Page[]) {
   if (!pages || pages.length === 0 || !pages[0]) {
     return;
   }
-  console.log("monthChanged", pages[0]);
   currMonth.value = new Date(pages[0].year, pages[0].month - 1, 1);
   queryStartDate.value = getFirstAndLastDay(currMonth.value).firstDay;
   queryEndDate.value = getFirstAndLastDay(currMonth.value).lastDay;
@@ -197,7 +200,6 @@ watch(currDate, () => {
 
 const setDayLogs = () => {
   if (!currDate.value || !monthLogs.value) {
-    console.log("no currDate or monthLogs");
     return;
   }
   const dayLogsTmp = monthLogs.value.filter((item) => {

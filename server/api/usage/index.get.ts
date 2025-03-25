@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
   const endDateParam = new Date(endDate)
   endDateParam.setDate(endDateParam.getDate() + 1)
   const filters: SQL[] = []
-  console.log(projectIdParam, assetIdParam, startDateParam, endDateParam)
+  
   if (projectIdParam) {
     filters.push(eq(tables.assetUsage.projectId, projectIdParam))  
   }

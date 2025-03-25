@@ -1,5 +1,6 @@
 <template>
-  <div class="p-2">
+  <div class="p-2 space-y-4">
+    <UInput v-model="search" placeholder="Szukaj" class="w-full" />
     <UCard v-if="data" v-for="projectData in data" :key="projectData.projects.id" class="mb-2">
       <div class="flex justify-between">
         <h1 class="text-xl font-bold">{{ projectData.projects.name }}</h1>
@@ -47,7 +48,13 @@ definePageMeta({
   middleware: ["auth"],
 })
 
-const { data, refresh } = await useFetch("/api/projects");
+const search = ref("");
+
+const { data, refresh } = await useFetch("/api/projects", {
+  query: {
+    search: search
+  }
+});
 const { data: clients } = await useFetch("/api/clients");
 const isOpen = ref(false);
 
@@ -77,10 +84,11 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     isOpen.value = false;
     refresh();
   } catch (error) {
-    console.log({ error });
+
     alert(error.statusMessage || error);
   }
 }
+
 
 </script>
 

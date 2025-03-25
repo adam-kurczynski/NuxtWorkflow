@@ -29,10 +29,16 @@ const links = [{
   iconClass: "h-8 w-8",
 }, {
   label: "",
-  to: "/materials",
+  to: "/materials-usage",
   icon: 'i-material-symbols-warehouse-rounded',
   iconClass: "h-8 w-8",
-}]
+}, {
+  label: "",
+  to: "/admin-panel",
+  icon: 'i-material-symbols-settings-rounded',
+  iconClass: "h-8 w-8",
+}
+]
 
 const adminLinks = [{
   label: "",
