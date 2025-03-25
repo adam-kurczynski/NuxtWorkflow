@@ -18,7 +18,7 @@
       <p>Brak zalogowanych godzin w tym dniu</p>
     </UCard>
     <UButton icon="i-material-symbols-add-2" @click="openForm"
-      class="fixed bottom-24 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
+      class="bottom-24 fixed right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
     <UModal v-model="isOpen">
       <div class="p-4">
         <h1 class="text-2xl font-bold">Dodaj godziny</h1>
@@ -50,8 +50,6 @@
 import { object, string, number, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 import getFirstAndLastDay from "~~/utils/getFirstAndLastDay";
-import { type Page, type CalendarDay } from "v-calendar/dist/types/src/utils/page.js";
-import type { AttributeConfig } from "v-calendar/dist/types/src/utils/attribute.js";
 import type { TimelogResponse, User } from "~~/server/api/types";
 import formatDate from "~~/utils/formatDate";
 import formatDateTime from "~~/utils/formatDateTime";
@@ -71,7 +69,7 @@ const currMonth = ref(new Date());
 const queryStartDate = ref(getFirstAndLastDay(new Date()).firstDay)
 const queryEndDate = ref(getFirstAndLastDay(new Date()).lastDay)
 const currDate = ref();
-const attrs = ref([] as AttributeConfig[]);
+const attrs = ref([]);
 const dayLogs = ref([] as TimelogResponse[]);
 const toast = useToast();
 const { user } = useUserSession()
@@ -163,7 +161,7 @@ const deleteLog = async (id: number) => {
 }
 
 
-function monthChanged(pages: Page[]) {
+function monthChanged(pages) {
   if (!pages || pages.length === 0 || !pages[0]) {
     return;
   }
@@ -172,7 +170,7 @@ function monthChanged(pages: Page[]) {
   queryEndDate.value = getFirstAndLastDay(currMonth.value).lastDay;
 }
 
-function dayChanged(day: CalendarDay) {
+function dayChanged(day) {
   if (!day) {
     return;
   }
