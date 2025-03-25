@@ -47,7 +47,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
 import { object, string, number, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 import getFirstAndLastDay from "~~/utils/getFirstAndLastDay";
