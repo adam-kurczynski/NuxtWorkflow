@@ -1,6 +1,7 @@
 import { compareSync } from "bcrypt-ts"
 
 export default defineEventHandler(async (event) => {
+  console.log('login.post.ts')
   const body = await readBody(event)
   const { username, password } = body
 

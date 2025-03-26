@@ -1,5 +1,6 @@
 export default eventHandler(async (event) => {
   const { search }: {search: string} = getQuery(event)
+  console.log('search', search)
   if (search) {
     const clients = await useDrizzle()
     .select().from(tables.clients)
