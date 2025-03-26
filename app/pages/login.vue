@@ -57,19 +57,20 @@ const schema = object({
 async function onSubmit(event) {
   const body = event.data;
   loading.value = true;
-  try {
-    await $fetch("/api/auth/login", {
-      method: "POST",
-      body
-    })
-    await refreshSession();
-    router.replace("/");
 
-  } catch (error) {
-    alert(error.statusMessage || error);
-    console.log(error);
-    loading.value = false;
-  }
+  $fetch('/api/login', {
+    method: 'POST',
+    body
+  })
+    .then(async () => {
+      // Refresh the session on client-side and redirect to the home page
+      await refreshSession()
+      await router.replace('/')
+    })
+    .catch(() => {
+      alert('Bad credentials')
+      loading.value = false
+    })
 
 }
 </script>
