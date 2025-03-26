@@ -14,13 +14,15 @@ export default defineEventHandler(async (event) => {
     throw new Error('Invalid password')
   }
 
-  const userData = {username: username, role: user.role, name: user.name, email: user.email, avatar: user.avatar, id: user.id, password: user.password}
+  const userData = {username: username, role: user.role, name: user.name, email: user.email, avatar: user.avatar, id: user.id}
 
   try {
     await setUserSession(event, {
       user: userData,
       loggedInAt: new Date(),
-      password: user.password
+      secure: {
+        password: user.password
+      }
     })
   } catch (error) {
     console.log('error', error)
