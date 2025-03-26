@@ -1,4 +1,4 @@
-import { compareSync } from "bcrypt-ts"\
+import { compareSync } from "bcrypt-ts"
 import { z } from "zod"
 
 const bodySchema = z.object({
