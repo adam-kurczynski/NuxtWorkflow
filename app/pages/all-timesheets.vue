@@ -61,6 +61,7 @@ import formatDateTime from "~~/utils/formatDateTime";
 import countLoggedTime from "~~/utils/countLoggedTime";
 import parseDecimalToTime from "~~/utils/parseDecimalToTime";
 
+
 const { data: projects } = await useFetch("/api/projects");
 const { data: users } = await useFetch("/api/users");
 
