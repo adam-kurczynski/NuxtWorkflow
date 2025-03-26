@@ -63,11 +63,6 @@ async function onSubmit(event) {
   })
     .then(async () => {
       // Refresh the session on client-side and redirect to the home page
-      try {
-        await refreshSession();
-      } catch (error) {
-        console.error('Error refreshing session:', error);
-      }
       await router.replace('/')
     })
     .catch(() => {
