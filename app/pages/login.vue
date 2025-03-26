@@ -58,7 +58,7 @@ async function onSubmit(event) {
   const body = event.data;
   loading.value = true;
   try {
-    await $fetch("/api/auth/login", {
+    await fetch("/api/auth/login", {
       method: "POST",
       body
     })
