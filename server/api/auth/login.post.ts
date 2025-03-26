@@ -30,7 +30,7 @@ export default eventHandler(async (event) => {
 
     })
   } catch (error) {
-    console.log('error', error)
+    throw new Error('Failed to create session')
   }
     return "Hello, World!"
 })
