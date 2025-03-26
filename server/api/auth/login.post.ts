@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
       loggedInAt: new Date(),
     })
   } catch (error) {
-    throw new Error(`Failed to set user session: ${error.message}`)
+    console.log('error', error)
   }
     return "Hello, World!"
 })
