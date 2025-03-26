@@ -24,7 +24,7 @@ export default eventHandler(async (event) => {
   const userData = {username: username, role: user.role, name: user.name, email: user.email, avatar: user.avatar, id: user.id}
 
   try {
-    await setUserSession(event, {
+    await replaceUserSession(event, {
       user: userData,
       loggedInAt: new Date(),
 
