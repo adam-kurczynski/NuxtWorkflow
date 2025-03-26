@@ -4,6 +4,8 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody(event)
   const { username, password } = body
+  console.log('username', username)
+  console.log('password', password)
 
   const [user] = await useDrizzle().select().from(tables.users).where(eq(tables.users.username, username))
   if (!user) {
