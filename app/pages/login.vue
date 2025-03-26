@@ -57,8 +57,7 @@ const schema = object({
 async function onSubmit(event) {
   const body = event.data;
   loading.value = true;
-
-  $fetch('/api/login', {
+  $fetch('/api/auth/login', {
     method: 'POST',
     body
   })
