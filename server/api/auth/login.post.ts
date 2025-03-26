@@ -1,6 +1,6 @@
 import { compareSync } from "bcrypt-ts"
 
-export default defineEventHandler(async (event) => {
+export default eventHandler(async (event) => {
 
   const body = await readBody(event)
   const { username, password } = body
@@ -20,9 +20,7 @@ export default defineEventHandler(async (event) => {
     await setUserSession(event, {
       user: userData,
       loggedInAt: new Date(),
-      secure: {
-        password: user.password
-      }
+
     })
   } catch (error) {
     console.log('error', error)
