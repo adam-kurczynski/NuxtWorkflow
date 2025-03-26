@@ -1,8 +1,14 @@
-import { compareSync } from "bcrypt-ts"
+import { compareSync } from "bcrypt-ts"\
+import { z } from "zod"
+
+const bodySchema = z.object({
+  username: z.string(),
+  password: z.string(),
+})
 
 export default eventHandler(async (event) => {
 
-  const body = await readBody(event)
+  const body = await readValidatedBody(event, bodySchema.parse)
   const { username, password } = body
 
   const [user] = await useDrizzle().select().from(tables.users).where(eq(tables.users.username, username))
@@ -11,6 +17,7 @@ export default eventHandler(async (event) => {
   }
 
   if (!compareSync(password, user.password)) {
+    console.log('invalid password')
     throw new Error('Invalid password')
   }
 
