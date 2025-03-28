@@ -21,6 +21,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@samk-dev/nuxt-vcalendar',
   ],
+  css: ['~/assets/css/main.css'],
   tailwindcss: {
     exposeConfig: true,
   },

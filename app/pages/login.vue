@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-center items-center h-screen flex-col">
+  <div class="flex justify-center items-center h-screen flex-col w-full p-2">
     <h1 class="text-4xl font-bold p-10">Workflow</h1>
-    <UCard class="w-96">
+    <UCard class="w-full p-4">
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Username" name="username">
           <UInput v-model="state.username" />
