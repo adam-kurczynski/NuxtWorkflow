@@ -63,10 +63,11 @@ async function onSubmit(event) {
   })
     .then(async () => {
       // Refresh the session on client-side and redirect to the home page
+      await refreshSession()
       await router.replace('/')
     })
     .catch(() => {
-      alert('Bad credentials')
+      alert('Niepoprawny login lub hasło')
       loading.value = false
     })
 
