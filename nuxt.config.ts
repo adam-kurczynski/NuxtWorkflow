@@ -1,5 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-
 export default defineNuxtConfig({
   ui: {
     notifications: {
@@ -17,12 +16,14 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     'nuxt-auth-utils',
     '@nuxt/ui',
+    '@nuxtjs/tailwindcss',
     '@nuxt/icon',
     '@nuxtjs/color-mode',
     '@samk-dev/nuxt-vcalendar',
-    '@nuxtjs/tailwindcss',
   ],
-  //css: ['~/assets/css/main.css',],
+  tailwindcss: {
+    exposeConfig: true,
+  },
   hub: {
     database: true,
     kv: true,
