@@ -18,7 +18,7 @@
       <p>Brak zalogowanych godzin w tym dniu</p>
     </UCard>
     <UButton icon="i-material-symbols-add-2" @click="openForm"
-      class="bottom-24 fixed right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
+      class="bottom-24 fixed z-50 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
     <UModal v-model="isOpen">
       <div class="p-4">
         <h1 class="text-2xl font-bold">Dodaj godziny</h1>
