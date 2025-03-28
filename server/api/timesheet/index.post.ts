@@ -1,4 +1,9 @@
 export default eventHandler(async (event) => {
+  const { user } = await requireUserSession(event)
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+  
   const { startTime, endTime, projectId, userId } = await readBody(event)
   //check if timesheet doeasn't collide with existing timesheet
 

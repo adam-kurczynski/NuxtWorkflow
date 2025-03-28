@@ -1,5 +1,10 @@
 import { SQL, desc } from 'drizzle-orm'
 export default eventHandler(async (event) => {
+  const { user } = await requireUserSession(event)
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+  
   const { projectId, assetId, startDate, endDate }: { projectId: string, assetId: string, startDate: string, endDate: string } = getQuery(event)
 
   const projectIdParam = parseInt(projectId)

@@ -49,6 +49,13 @@ import { object, string, ref as yupRef, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 
 
+definePageMeta({
+  title: "Pracownicy",
+  description: "Pracownicy",
+  middleware: ["auth"],
+})
+
+
 const { data: workers, error, refresh } = useFetch<User[]>('/api/users');
 
 const isOpen = ref(false);

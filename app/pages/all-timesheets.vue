@@ -62,6 +62,13 @@ import countLoggedTime from "~~/utils/countLoggedTime";
 import parseDecimalToTime from "~~/utils/parseDecimalToTime";
 
 
+definePageMeta({
+  title: "Zalogowane godziny",
+  description: "Zalogowane godziny",
+  middleware: ["auth"],
+})
+
+
 const { data: projects } = await useFetch("/api/projects");
 const { data: users } = await useFetch("/api/users");
 

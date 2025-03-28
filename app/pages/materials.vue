@@ -41,6 +41,13 @@ import { object, string, number, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 import type { Asset } from "~~/server/utils/drizzle";
 
+
+definePageMeta({
+  title: "Spis materiałów",
+  description: "Spis materiałów",
+  middleware: ["auth"],
+})
+
 const isOpen = ref(false);
 const searchString = ref("");
 const currentMaterialId = ref<number | null>(null);

@@ -38,7 +38,7 @@ import type { FormSubmitEvent } from "#ui/types";
 definePageMeta({
   title: "Klienci",
   description: "Klienci",
-  //middleware: ["auth"],
+  middleware: ["auth"],
 })
 
 

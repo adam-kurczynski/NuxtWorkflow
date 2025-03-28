@@ -1,4 +1,8 @@
 export default eventHandler(async (event) => {
+  const { user } = await requireUserSession(event)
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
   const { search }: {search: string} = getQuery(event)
   console.log('search', search)
   if (search) {

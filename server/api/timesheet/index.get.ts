@@ -1,5 +1,10 @@
 
 export default eventHandler(async (event) => {
+  const { user } = await requireUserSession(event)
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+  
   const {projectId, userId, startTime, endTime}: {projectId: string, userId: string, startTime: string, endTime: string} = getQuery(event)
   
   if (!startTime || !endTime) {

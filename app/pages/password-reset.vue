@@ -19,6 +19,13 @@
 import { object, string, type InferType, ref as yupRef } from 'yup'
 import type { FormSubmitEvent } from '#ui/types'
 
+
+definePageMeta({
+  title: "Reset hasła",
+  description: "Reset hasła",
+  middleware: ["auth"],
+})
+
 const { user } = useUserSession()
 const Toast = useToast()
 

@@ -2,7 +2,6 @@ import { parseURL } from 'ufo'
 
 export default eventHandler(async (event) => {
   // Skip during prerendering
-  return
   if (import.meta.prerender) return
 
   const { pathname } = parseURL(event.path)

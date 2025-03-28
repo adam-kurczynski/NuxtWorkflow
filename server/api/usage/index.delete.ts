@@ -1,4 +1,9 @@
 export default eventHandler(async (event) => {
+  const { user } = await requireUserSession(event)
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+  
   const { id }: {id: string} = getQuery(event)
   const idParam = parseInt(id)
 
