@@ -2,6 +2,9 @@ import type { TimelogResponse } from "~~/server/api/types";
 
 
 export default (timesheets: TimelogResponse[] | number) => {
+  if (!timesheets) {
+    return 0
+  }
   if (typeof timesheets === 'number') {
     return timesheets
   }
