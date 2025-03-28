@@ -9,10 +9,10 @@
       </UFormField>
       <UFormField label="Projekt" name="projectId">
         <USelect v-if="projects" placeholder="Wybierz projekt" class="w-full" v-model="state.projectId"
-          option-attribute="name" :options="addEmptyValue('Wszystkie',
+          option-attribute="name" :items="addEmptyValue('Wszystkie',
             projects.map(project => {
               return {
-                name: project.projects.name,
+                label: project.projects.name,
                 value: project.projects.id
               }
             })
@@ -20,10 +20,10 @@
       </UFormField>
       <UFormField label="Pracownik" name="userId">
         <USelect v-if="users" class="w-full" placeholder="Wybierz pracownika" v-model="state.userId"
-          option-attribute="name" :options="addEmptyValue('Wszyscy',
+          option-attribute="name" :items="addEmptyValue('Wszyscy',
             users.map(user => {
               return {
-                name: user.name,
+                label: user.name,
                 value: user.id
               }
             }))" />
@@ -107,7 +107,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 }
 
 const addEmptyValue = (name: string, list: any[]) => {
-  return [{ name, value: 0 }, ...list]
+  return [{ label: name, value: 0 }, ...list]
 }
 
 </script>

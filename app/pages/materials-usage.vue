@@ -3,11 +3,11 @@
     <UForm :schema="schema" :state="state" @submit="refresh" class="space-y-4">
       <UFormField label="Materiał" name="assetId">
         <USelect v-if="assets" v-model="state.assetId" option-attribute="name" class="w-full"
-          :options="prepareAssetsDropdown(assets)" />
+          :items="prepareAssetsDropdown(assets)" />
       </UFormField>
       <UFormField label="Projekt" name="projectId">
         <USelect v-if="projects" v-model="state.projectId" option-attribute="name" class="w-full"
-          :options="prepareProjectsDropdown(projects)" />
+          :items="prepareProjectsDropdown(projects)" />
       </UFormField>
       <UFormField label="Czas dodania od" name="startTime">
         <UInput v-model="state.startDate" type="date" class="w-full" />
@@ -26,17 +26,17 @@
       <template #body>
         <UForm :schema="formSchema" :state="formState" @submit="onSubmit" class="space-y-4">
           <UFormField label="Materiał" name="assetId">
-            <USelect v-if="assets" class="w-full" v-model="formState.assetId" option-attribute="name" :options="assets.map(asset => {
+            <USelect v-if="assets" class="w-full" v-model="formState.assetId" option-attribute="name" :items="assets.map(asset => {
               return {
-                name: asset.name,
+                label: asset.name,
                 value: asset.id
               }
             })" />
           </UFormField>
           <UFormField label="Projekt" name="projectId">
-            <USelect v-if="projects" class="w-full" v-model="formState.projectId" option-attribute="name" :options="projects.map(project => {
+            <USelect v-if="projects" class="w-full" v-model="formState.projectId" option-attribute="name" :items="projects.map(project => {
               return {
-                name: project.projects.name,
+                label: project.projects.name,
                 value: project.projects.id
               }
             })" />
@@ -190,24 +190,24 @@ const deleteMaterial = async (id: number) => {
 const prepareAssetsDropdown = (assets: any[]) => {
   const out = assets.map(asset => {
     return {
-      name: asset.name,
+      label: asset.name,
       value: asset.id
     }
   })
 
-  out.unshift({ name: 'Wszystkie', value: 0 })
+  out.unshift({ label: 'Wszystkie', value: 0 })
   return out
 }
 
 const prepareProjectsDropdown = (projects: any[]) => {
   const out = projects.map(project => {
     return {
-      name: project.projects.name,
+      label: project.projects.name,
       value: project.projects.id
     }
   })
 
-  out.unshift({ name: 'Wszystkie', value: 0 })
+  out.unshift({ label: 'Wszystkie', value: 0 })
   return out
 }
 
