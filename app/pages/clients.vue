@@ -1,38 +1,31 @@
 <template>
-  <div class="p-2 space-y-4">
-    <UInput v-model="search" placeholder="Szukaj" />
-    <UCard v-for="client in data" :key="client.id" class="mb-2">
-      <p>{{ client.name }}</p>
-      <p>{{ client.address }}</p>
-      <p>{{ client.phone }}</p>
-    </UCard>
-    <UButton icon="i-material-symbols-add-2" @click="isOpen = true"
-      class="fixed z-50 bottom-24 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
-    <UModal v-model="isOpen" fullscreen>
+  <UInput v-model="search" placeholder="Szukaj" />
+  <UCard v-for="client in data" :key="client.id" class="mb-2">
+    <p>{{ client.name }}</p>
+    <p>{{ client.address }}</p>
+    <p>{{ client.phone }}</p>
+  </UCard>
 
-      <div class="p-4">
-        <div class="flex items-center justify-between ">
-          <h1 class="text-2xl font-bold">Dodaj Klienta</h1>
-          <UButton icon="i-material-symbols-cancel-outline-rounded" @click="isOpen = false"
-            class="absolute top-4 right-4" />
-        </div>
-        <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
-          <UFormGroup label="Nazwa" name="name">
-            <UInput v-model="state.name" />
-          </UFormGroup>
-          <UFormGroup label="Adres" name="address">
-            <UInput v-model="state.address" />
-          </UFormGroup>
-          <UFormGroup label="Telefon" name="phone">
-            <UInput v-model="state.phone" />
-          </UFormGroup>
-          <UButton type="submit" class="w-full flex-row justify-center">
-            Dodaj
-          </UButton>
-        </UForm>
-      </div>
-    </UModal>
-  </div>
+  <UModal v-model:open="isOpen" fullscreen class="p-4" title="Dodaj klienta">
+    <UButton icon="i-material-symbols-add-2"
+      class="fixed z-50 bottom-24 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
+    <template #body>
+      <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
+        <UFormField label="Nazwa" name="name">
+          <UInput v-model="state.name" class="w-full" />
+        </UFormField>
+        <UFormField label="Adres" name="address">
+          <UInput v-model="state.address" class="w-full" />
+        </UFormField>
+        <UFormField label="Telefon" name="phone">
+          <UInput v-model="state.phone" class="w-full" />
+        </UFormField>
+        <UButton type="submit" class="w-full flex-row justify-center">
+          Dodaj
+        </UButton>
+      </UForm>
+    </template>
+  </UModal>
 </template>
 
 <script lang="ts" setup>
@@ -49,6 +42,7 @@ definePageMeta({
 
 const isOpen = ref(false);
 const search = ref("");
+const toast = useToast();
 const { data, refresh } = await useFetch("/api/clients", {
   query: {
     search: search
@@ -78,9 +72,16 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     });
     isOpen.value = false;
     refresh();
+    toast.add({
+      title: "Dodano klienta",
+      color: "success"
+    })
   } catch (error) {
+    toast.add({
+      title: "Nie udało się dodać klienta",
+      color: "error"
+    })
 
-    alert(error.statusMessage || error);
   }
 }
 

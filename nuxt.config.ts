@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     'nuxt-auth-utils',
     '@nuxt/ui',
-    '@nuxtjs/tailwindcss',
+    //'@nuxtjs/tailwindcss',
     '@nuxt/icon',
     '@nuxtjs/color-mode',
     '@samk-dev/nuxt-vcalendar',

@@ -1,10 +1,11 @@
 <template>
   <div class="fixed bottom-0 left-0 z-50 w-full p-2 bg-black">
-    <UHorizontalNavigation :links="isAdmin ? adminLinks : links" class="main-nav" />
+    <UNavigationMenu orientation="horizontal" :items="isAdmin ? adminLinks : links" class="main-nav" />
   </div>
 </template>
 
 <script setup lang="ts">
+
 const { user } = useUserSession();
 const isAdmin = user.value?.role === "admin";
 const links = [{
@@ -78,6 +79,10 @@ const adminLinks = [{
 <style>
 .main-nav ul {
   justify-content: space-between;
+  width: 100%;
+}
+
+.main-nav>div {
   width: 100%;
 }
 </style>

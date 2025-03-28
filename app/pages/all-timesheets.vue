@@ -1,15 +1,15 @@
 <template>
   <div class="w-full p-2 fle justify-center flex-col gap-2">
     <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
-      <UFormGroup label="Data od" name="startTime">
-        <UInput v-model="state.startTime" type="date" />
-      </UFormGroup>
-      <UFormGroup label="Data do" name="endTime">
-        <UInput v-model="state.endTime" type="date" />
-      </UFormGroup>
-      <UFormGroup label="Projekt" name="projectId">
-        <USelect v-if="projects" placeholder="Wybierz projekt" v-model="state.projectId" option-attribute="name"
-          :options="addEmptyValue('Wszystkie',
+      <UFormField label="Data od" name="startTime">
+        <UInput v-model="state.startTime" type="date" class="w-full" />
+      </UFormField>
+      <UFormField label="Data do" name="endTime">
+        <UInput v-model="state.endTime" type="date" class="w-full" />
+      </UFormField>
+      <UFormField label="Projekt" name="projectId">
+        <USelect v-if="projects" placeholder="Wybierz projekt" class="w-full" v-model="state.projectId"
+          option-attribute="name" :options="addEmptyValue('Wszystkie',
             projects.map(project => {
               return {
                 name: project.projects.name,
@@ -17,16 +17,17 @@
               }
             })
           )" />
-      </UFormGroup>
-      <UFormGroup label="Pracownik" name="userId">
-        <USelect v-if="users" placeholder="Wybierz pracownika" v-model="state.userId" option-attribute="name" :options="addEmptyValue('Wszyscy',
-          users.map(user => {
-            return {
-              name: user.name,
-              value: user.id
-            }
-          }))" />
-      </UFormGroup>
+      </UFormField>
+      <UFormField label="Pracownik" name="userId">
+        <USelect v-if="users" class="w-full" placeholder="Wybierz pracownika" v-model="state.userId"
+          option-attribute="name" :options="addEmptyValue('Wszyscy',
+            users.map(user => {
+              return {
+                name: user.name,
+                value: user.id
+              }
+            }))" />
+      </UFormField>
       <UButton type="submit" class="w-full flex-row justify-center">
         Wyszukaj
       </UButton>
@@ -42,8 +43,8 @@
             <p>{{ log.projects?.name }}</p>
           </div>
           <div>
-            <p>{{ formatDateTime(log.user_timelog.startTime) }}</p>
-            <p>{{ formatDateTime(log.user_timelog.endTime) }}</p>
+            <p>{{ formatDate(log.user_timelog.startTime) }}</p>
+            <p>{{ formatTime(log.user_timelog.startTime) + " - " + formatTime(log.user_timelog.endTime) }}</p>
           </div>
         </div>
       </UCard>
@@ -57,7 +58,8 @@ import { object, string, number, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 import getFirstAndLastDay from "~~/utils/getFirstAndLastDay";
 import type { TimelogResponse } from "~~/server/api/types";
-import formatDateTime from "~~/utils/formatDateTime";
+import formatDate from "~~/utils/formatDate";
+import formatTime from "~~/utils/formatTime";
 import countLoggedTime from "~~/utils/countLoggedTime";
 import parseDecimalToTime from "~~/utils/parseDecimalToTime";
 

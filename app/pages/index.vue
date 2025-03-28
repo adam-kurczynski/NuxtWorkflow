@@ -2,35 +2,34 @@
   <main>
     <div class="flex flex-col items-center space-y-4 p-2">
       <p>W tym miesiącu zalogowałeś {{ parseDecimalToTime(countLoggedTime(data)) }}</p>
-      <UProgress :value="countLoggedTime(data) / 160 * 100" />
-      <UButton @click="isOpen = true">Dodaj dzisiejszy czas</UButton>
-      <UModal v-model="isOpen" fullscreen>
-        <div class="p-4">
-          <div class="flex items-center justify-between ">
-            <h1 class="text-2xl font-bold">Dodaj Czas</h1>
-            <UButton icon="i-material-symbols-cancel-outline-rounded" @click="isOpen = false"
-              class="absolute top-4 right-4" />
+      <UProgress v-model="loggedTime" />
+
+      <UModal v-model:open="isOpen" fullscreen title="Dodaj godziny">
+        <UButton>Dodaj dzisiejszy czas</UButton>
+        <template #body>
+          <div class="p-4">
+            <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4 flex justify-center flex-col">
+              <UFormField label="Projekt" name="projectId">
+                <USelect class="w-full" placeholder="Wybierz projekt" v-if="projects" v-model="state.projectId"
+                  option-attribute="name" :items="projects.map(project => {
+                    return {
+                      label: project.projects.name,
+                      value: project.projects.id
+                    }
+                  })" />
+              </UFormField>
+              <UFormField label="Czas rozpoczęcia" name="startTime">
+                <UInput class="w-full" v-model="state.startTime" type="time" />
+              </UFormField>
+              <UFormField label="Czas zakończenia" name="endTime">
+                <UInput class="w-full" v-model="state.endTime" type="time" />
+              </UFormField>
+              <UButton type="submit" class="w-full flex-row justify-center">
+                Dodaj
+              </UButton>
+            </UForm>
           </div>
-          <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
-            <UFormGroup label="Projekt" name="projectId">
-              <USelect v-if="projects" v-model="state.projectId" option-attribute="name" :options="projects.map(project => {
-                return {
-                  name: project.projects.name,
-                  value: project.projects.id
-                }
-              })" />
-            </UFormGroup>
-            <UFormGroup label="Czas rozpoczęcia" name="startTime">
-              <UInput v-model="state.startTime" type="time" />
-            </UFormGroup>
-            <UFormGroup label="Czas zakończenia" name="endTime">
-              <UInput v-model="state.endTime" type="time" />
-            </UFormGroup>
-            <UButton type="submit" class="w-full flex-row justify-center">
-              Dodaj
-            </UButton>
-          </UForm>
-        </div>
+        </template>
       </UModal>
     </div>
   </main>
@@ -56,14 +55,19 @@ definePageMeta({
 })
 
 const { user } = useUserSession();
+const isOpen = ref(false);
 
 type Schema = InferType<typeof schema>;
 
-
-const { data, refresh } = await useFetch(`/api/timesheet?startTime=${getFirstAndLastDay(new Date).firstDay}&endTime=${getFirstAndLastDay(new Date).lastDay}&userId=${user.value.id}`);
+const loggedTime = ref(0);
+const { data, refresh } = await useFetch(`/api/timesheet?startTime=${getFirstAndLastDay(new Date).firstDay}&endTime=${getFirstAndLastDay(new Date).lastDay}&userId=${user.value.id}`, {
+  onResponse({ request, response, options }) {
+    if (response._data) {
+      loggedTime.value = countLoggedTime(response._data) / 160 * 100;
+    }
+  }
+});
 const { data: projects } = await useFetch("/api/projects");
-
-const isOpen = ref(false);
 
 const state = reactive({
   projectId: undefined,

@@ -34,7 +34,6 @@
   "devDependencies": {
     "@iconify-json/material-symbols": "^1.2.14",
     "@nuxt/eslint-config": "^0.7.5",
-    "@nuxtjs/tailwindcss": "^6.13.2",
     "drizzle-kit": "^0.30.3",
     "eslint": "^9.18.0",
     "sass-embedded": "^1.83.4",

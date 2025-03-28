@@ -1,61 +1,57 @@
 <template>
   <div class="space-y-4 p-2">
     <UForm :schema="schema" :state="state" @submit="refresh" class="space-y-4">
-      <UFormGroup label="Materiał" name="assetId">
-        <USelect v-if="assets" v-model="state.assetId" option-attribute="name"
+      <UFormField label="Materiał" name="assetId">
+        <USelect v-if="assets" v-model="state.assetId" option-attribute="name" class="w-full"
           :options="prepareAssetsDropdown(assets)" />
-      </UFormGroup>
-      <UFormGroup label="Projekt" name="projectId">
-        <USelect v-if="projects" v-model="state.projectId" option-attribute="name"
+      </UFormField>
+      <UFormField label="Projekt" name="projectId">
+        <USelect v-if="projects" v-model="state.projectId" option-attribute="name" class="w-full"
           :options="prepareProjectsDropdown(projects)" />
-      </UFormGroup>
-      <UFormGroup label="Czas dodania od" name="startTime">
-        <UInput v-model="state.startDate" type="date" />
-      </UFormGroup>
-      <UFormGroup label="Czas dodania do" name="endTime">
-        <UInput v-model="state.endDate" type="date" />
-      </UFormGroup>
+      </UFormField>
+      <UFormField label="Czas dodania od" name="startTime">
+        <UInput v-model="state.startDate" type="date" class="w-full" />
+      </UFormField>
+      <UFormField label="Czas dodania do" name="endTime">
+        <UInput v-model="state.endDate" type="date" class="w-full" />
+      </UFormField>
       <UButton type="submit" class="w-full flex-row justify-center">
         Szukaj
       </UButton>
     </UForm>
-    <UButton icon="i-material-symbols-add-2" @click="openForm"
-      class="fixed z-50 bottom-24 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
-    <UModal v-model="isOpen" fullscreen>
-      <div class="p-4">
-        <div class="flex items-center justify-between ">
-          <h1 class="text-2xl font-bold">Dodaj</h1>
-          <UButton icon="i-material-symbols-cancel-outline-rounded" @click="isOpen = false"
-            class="absolute top-4 right-4" />
-        </div>
+
+    <UModal v-model:open="isOpen" fullscreen title="Dodaj materiał">
+      <UButton icon="i-material-symbols-add-2" @click="openForm"
+        class="fixed z-50 bottom-24 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
+      <template #body>
         <UForm :schema="formSchema" :state="formState" @submit="onSubmit" class="space-y-4">
-          <UFormGroup label="Materiał" name="assetId">
-            <USelect v-if="assets" v-model="formState.assetId" option-attribute="name" :options="assets.map(asset => {
+          <UFormField label="Materiał" name="assetId">
+            <USelect v-if="assets" class="w-full" v-model="formState.assetId" option-attribute="name" :options="assets.map(asset => {
               return {
                 name: asset.name,
                 value: asset.id
               }
             })" />
-          </UFormGroup>
-          <UFormGroup label="Projekt" name="projectId">
-            <USelect v-if="projects" v-model="formState.projectId" option-attribute="name" :options="projects.map(project => {
+          </UFormField>
+          <UFormField label="Projekt" name="projectId">
+            <USelect v-if="projects" class="w-full" v-model="formState.projectId" option-attribute="name" :options="projects.map(project => {
               return {
                 name: project.projects.name,
                 value: project.projects.id
               }
             })" />
-          </UFormGroup>
-          <UFormGroup label="Ilość" name="quantity">
+          </UFormField>
+          <UFormField label="Ilość" name="quantity">
             <div class="flex justify-between items-center">
               <UInput v-model="formState.quantity" class="w-full" />
               <p class="pl-2">{{ currUnit }}</p>
             </div>
-          </UFormGroup>
+          </UFormField>
           <UButton type="submit" class="w-full flex-row justify-center">
             Dodaj
           </UButton>
         </UForm>
-      </div>
+      </template>
     </UModal>
     <div v-if="materialsUsage?.length" class="space-y-4">
       <h1>{{ `Znaleziono ${materialsUsage.length} pozycji` }}</h1>
@@ -116,16 +112,16 @@ const formState = reactive({
 })
 
 const schema = object({
-  projectId: number().required('Required'),
-  assetId: number().required('Required'),
-  startDate: string().required('Required'),
-  endDate: string().required('Required')
+  projectId: number().required("Pole wymagane"),
+  assetId: number().required('Pole wymagane'),
+  startDate: string().required('Pole wymagane'),
+  endDate: string().required('Pole wymagane')
 })
 
 const formSchema = object({
-  projectId: number().required('Required'),
-  assetId: number().required('Required'),
-  quantity: number().required('Required')
+  projectId: number().required("Pole wymagane"),
+  assetId: number().required("Pole wymagane"),
+  quantity: number().required("Pole wymagane")
 })
 
 const { user } = useUserSession()
@@ -160,13 +156,13 @@ const onSubmit = async (event: FormSubmitEvent<InferType<typeof formSchema>>) =>
     Toast.add({
       title: 'Dodano',
       description: 'Dodano materiał',
-      color: 'emerald'
+      color: 'success'
     })
   } catch (error) {
     Toast.add({
       title: 'Wystąpił błąd',
       description: 'Błąd podczas dodawania materiału',
-      color: 'rose'
+      color: 'error'
     })
   }
 }
@@ -179,14 +175,14 @@ const deleteMaterial = async (id: number) => {
     Toast.add({
       title: 'Usunięto',
       description: 'Usunięto materiał',
-      color: 'emerald'
+      color: 'success'
     })
     refresh()
   } catch (error) {
     Toast.add({
       title: 'Wystąpił błąd',
       description: 'Błąd podczas usuwania materiału',
-      color: 'rose'
+      color: 'error'
     })
   }
 }

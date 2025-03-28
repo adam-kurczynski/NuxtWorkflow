@@ -1,44 +1,38 @@
 <template>
-  <div class="p-2 space-y-4">
-    <UInput v-model="search" placeholder="Szukaj" class="w-full" />
-    <UCard v-if="data" v-for="projectData in data" :key="projectData.projects.id" class="mb-2">
-      <div class="flex justify-between">
-        <h1 class="text-xl font-bold">{{ projectData.projects.name }}</h1>
-      </div>
-      <p>{{ projectData.projects.description }}</p>
-      <p v-if="projectData.clients">{{ projectData.clients.name }}</p>
-    </UCard>
-    <UButton icon="i-material-symbols-add-2" @click="isOpen = true"
+  <UInput v-model="search" placeholder="Szukaj" class="w-full" />
+  <UCard v-if="data" v-for="projectData in data" :key="projectData.projects.id" class="mb-2">
+    <div class="flex justify-between">
+      <h1 class="text-xl font-bold">{{ projectData.projects.name }}</h1>
+    </div>
+    <p>{{ projectData.projects.description }}</p>
+    <p v-if="projectData.clients">{{ projectData.clients.name }}</p>
+  </UCard>
+
+  <UModal v-model:open="isOpen" title="Dodaj projekt" fullscreen class="p-4">
+    <UButton icon="i-material-symbols-add-2"
       class="fixed z-50 bottom-24 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
-    <UModal v-model="isOpen" fullscreen>
-      <div class="p-4">
-        <div class="flex items-center justify-between ">
-          <h1 class="text-2xl font-bold">Dodaj Projekt</h1>
-          <UButton icon="i-material-symbols-cancel-outline-rounded" @click="isOpen = false"
-            class="absolute top-4 right-4" />
-        </div>
-        <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
-          <UFormGroup label="Nazwa" name="name">
-            <UInput v-model="state.name" />
-          </UFormGroup>
-          <UFormGroup label="Opis" name="description">
-            <UInput v-model="state.description" />
-          </UFormGroup>
-          <UFormGroup label="Klient" name="clientId">
-            <USelect v-if="clients" v-model="state.clientId" option-attribute="name" :options="clients.map(client => {
-              return {
-                name: client.name,
-                value: client.id
-              }
-            })" />
-          </UFormGroup>
-          <UButton type="submit" class="w-full flex-row justify-center">
-            Dodaj
-          </UButton>
-        </UForm>
-      </div>
-    </UModal>
-  </div>
+    <template #body>
+      <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
+        <UFormField required label="Nazwa" name="name">
+          <UInput v-model="state.name" class="w-full" />
+        </UFormField>
+        <UFormField required label="Opis" name="description">
+          <UInput v-model="state.description" class="w-full" />
+        </UFormField>
+        <UFormField required label="Klient" name="clientId">
+          <USelect v-if="clients" class="w-full" v-model="state.clientId" option-attribute="name" :items="clients.map(client => {
+            return {
+              label: client.name,
+              value: client.id
+            }
+          })" />
+        </UFormField>
+        <UButton type="submit" class="w-full flex-row justify-center">
+          Dodaj
+        </UButton>
+      </UForm>
+    </template>
+  </UModal>
 </template>
 
 <script lang="ts" setup>
@@ -51,6 +45,8 @@ definePageMeta({
   description: "Projekty",
   middleware: ["auth"],
 })
+
+const toast = useToast();
 
 const search = ref("");
 
@@ -86,10 +82,17 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       }
     });
     isOpen.value = false;
+    toast.add({
+      color: 'success',
+      title: "Dodano projekt",
+    });
     refresh();
-  } catch (error) {
 
-    alert(error.statusMessage || error);
+  } catch (error) {
+    toast.add({
+      title: "Nie udało się dodać projektu",
+      color: 'error',
+    });
   }
 }
 

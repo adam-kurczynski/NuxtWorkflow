@@ -1,53 +1,50 @@
 <template>
-  <div class="w-full p-2 flex justify-center flex-col gap-2">
-    <client-only>
-      <VCalendar locale="pl" @did-move="monthChanged" @dayclick="dayChanged" :attributes="attrs" />
-    </client-only>
-    <h1 v-if="monthLogs?.length" class="text-center">{{ parseDecimalToTime(countLoggedTime(monthLogs)) + ` zalogowanych
-      w tym miesiącu`}} </h1>
-    <h1 v-if="currDate" class="text-center">{{ formatDate(currDate) }} </h1>
-    <UCard v-if="dayLogs.length" v-for="log in dayLogs" :key="log.user_timelog.id" class="mb-2 relative">
-      <UButton icon="i-material-symbols-delete-rounded" @click="deleteLog(log.user_timelog.id)"
-        class="absolute top-2 right-2 w-8 h-8 flex justify-center" />
-      <div class="flex justify-between">
-        <h1 class="text-xl font-bold">{{ log.projects?.name }}</h1>
-      </div>
-      <p>{{ formatDateTime(log.user_timelog.startTime) }} - {{ formatDateTime(log.user_timelog.endTime) }}</p>
-    </UCard>
-    <UCard v-if="dayLogs.length === 0 && currDate">
-      <p>Brak zalogowanych godzin w tym dniu</p>
-    </UCard>
-    <UButton icon="i-material-symbols-add-2" @click="openForm"
+  <client-only>
+    <VCalendar locale="pl" @did-move="monthChanged" @dayclick="dayChanged" :attributes="attrs" />
+  </client-only>
+  <h1 v-if="monthLogs?.length" class="text-center">{{ parseDecimalToTime(countLoggedTime(monthLogs)) + ` zalogowanych
+    w tym miesiącu`}} </h1>
+  <h1 v-if="currDate" class="text-center">{{ formatDate(currDate) }} </h1>
+  <UCard v-if="dayLogs.length" v-for="log in dayLogs" :key="log.user_timelog.id" class="mb-2 relative">
+    <UButton icon="i-material-symbols-delete-rounded" @click="deleteLog(log.user_timelog.id)"
+      class="absolute top-2 right-2 w-8 h-8 flex justify-center" />
+    <div class="flex justify-between">
+      <h1 class="text-xl font-bold">{{ log.projects?.name }}</h1>
+    </div>
+    <p>{{ formatDateTime(log.user_timelog.startTime) }} - {{ formatDateTime(log.user_timelog.endTime) }}</p>
+  </UCard>
+  <UCard v-if="dayLogs.length === 0 && currDate">
+    <p>Brak zalogowanych godzin w tym dniu</p>
+  </UCard>
+
+  <UModal v-model:open="isOpen" fullscreen title="Dodaj godziny">
+    <UButton icon="i-material-symbols-add-2"
       class="bottom-24 fixed z-50 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
-    <UModal v-model="isOpen" fullscreen>
+    <template #body>
       <div class="p-4">
-        <div class="flex items-center justify-between ">
-          <h1 class="text-2xl font-bold">Dodaj Godziny</h1>
-          <UButton icon="i-material-symbols-cancel-outline-rounded" @click="isOpen = false"
-            class="absolute top-4 right-4" />
-        </div>
         <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
-          <UFormGroup label="Projekt" name="projectId">
-            <USelect v-if="projects" v-model="state.projectId" option-attribute="name" :options="projects.map(project => {
-              return {
-                name: project.projects.name,
-                value: project.projects.id
-              }
-            })" />
-          </UFormGroup>
-          <UFormGroup label="Godzina rozpoczęcia" name="startTime">
-            <UInput v-model="state.startTime" type="time" />
-          </UFormGroup>
-          <UFormGroup label="Godzina zakończenia" name="endTime">
-            <UInput v-model="state.endTime" type="time" />
-          </UFormGroup>
+          <UFormField required label="Projekt" name="projectId">
+            <USelect placeholder="Wybierz projekt" v-if="projects" class="w-full" v-model="state.projectId"
+              option-attribute="name" :items="projects.map(project => {
+                return {
+                  label: project.projects.name,
+                  value: project.projects.id
+                }
+              })" />
+          </UFormField>
+          <UFormField required label="Godzina rozpoczęcia" name="startTime">
+            <UInput v-model="state.startTime" type="time" class="w-full" />
+          </UFormField>
+          <UFormField required label="Godzina zakończenia" name="endTime">
+            <UInput v-model="state.endTime" type="time" class="w-full" />
+          </UFormField>
           <UButton type="submit" class="w-full flex-row justify-center">
             Dodaj
           </UButton>
         </UForm>
       </div>
-    </UModal>
-  </div>
+    </template>
+  </UModal>
 </template>
 
 <script lang="ts" setup>
@@ -212,10 +209,3 @@ const setDayLogs = () => {
 }
 
 </script>
-
-<style>
-.vc-container {
-  width: 100%;
-  ;
-}
-</style>

@@ -1,15 +1,23 @@
 <template>
-  <div class="flex justify-center items-center h-screen flex-col w-full p-2">
+  <div class="flex justify-center items-center h-screen flex-col w-full p-4">
     <h1 class="text-4xl font-bold p-10">Workflow</h1>
-    <UCard class="w-full p-4">
+    <UCard class="w-full p-4 flex justify-center bg-black/10">
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormGroup label="Username" name="username">
-          <UInput v-model="state.username" />
-        </UFormGroup>
+        <UFormField label="Username" name="username">
+          <UInput v-model="state.username" class="w-full" />
+        </UFormField>
 
-        <UFormGroup label="Password" name="password">
-          <UInput v-model="state.password" type="password" />
-        </UFormGroup>
+        <UFormField label="Password" name="password">
+          <UInput v-model="state.password" :type="show ? 'text' : 'password'" :ui="{ trailing: 'pe-1' }" class="w-full">
+            <template #trailing>
+              <UButton color="neutral" variant="link" size="sm"
+                :icon="show ? 'i-material-symbols-visibility-off-outline-rounded' : 'i-material-symbols-visibility-outline-rounded'"
+                :aria-label="show ? 'Hide password' : 'Show password'" :aria-pressed="show" aria-controls="password"
+                @click="show = !show" />
+            </template>
+          </UInput>
+        </UFormField>
+
 
         <UButton type="submit" :loading="loading" class="w-full flex-row justify-center">
           Login
@@ -30,6 +38,7 @@ definePageMeta({
 
 const { user, fetch: refreshSession } = useUserSession();
 const router = useRouter();
+const toast = useToast();
 
 if (user.value) {
   router.push("/");
@@ -37,7 +46,7 @@ if (user.value) {
 
 import { object, string } from 'yup'
 
-
+const show = ref(false);
 const state = reactive({
   username: undefined,
   password: undefined
@@ -47,10 +56,9 @@ const loading = ref(false);
 
 
 const schema = object({
-  username: string().required('Required'),
+  username: string().required('Pole wymagane'),
   password: string()
-    .min(4, 'Must be at least 4 characters')
-    .required('Required')
+    .required('Pole wymagane')
 })
 
 
@@ -67,7 +75,11 @@ async function onSubmit(event) {
       await router.replace('/')
     })
     .catch(() => {
-      alert('Niepoprawny login lub hasło')
+      toast.add({
+        title: 'Błąd',
+        description: 'Niepoprawne dane logowania',
+        color: 'error'
+      })
       loading.value = false
     })
 
