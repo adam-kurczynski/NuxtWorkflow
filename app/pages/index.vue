@@ -4,9 +4,13 @@
       <p>W tym miesiącu zalogowałeś {{ parseDecimalToTime(countLoggedTime(data)) }}</p>
       <UProgress :value="countLoggedTime(data) / 160 * 100" />
       <UButton @click="isOpen = true">Dodaj dzisiejszy czas</UButton>
-      <UModal v-model="isOpen">
+      <UModal v-model="isOpen" fullscreen>
         <div class="p-4">
-          <h1 class="text-2xl font-bold">Dodaj czas</h1>
+          <div class="flex items-center justify-between ">
+            <h1 class="text-2xl font-bold">Dodaj Czas</h1>
+            <UButton icon="i-material-symbols-cancel-outline-rounded" @click="isOpen = false"
+              class="absolute top-4 right-4" />
+          </div>
           <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
             <UFormGroup label="Projekt" name="projectId">
               <USelect v-if="projects" v-model="state.projectId" option-attribute="name" :options="projects.map(project => {

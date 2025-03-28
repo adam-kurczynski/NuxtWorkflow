@@ -21,9 +21,13 @@
     </UForm>
     <UButton icon="i-material-symbols-add-2" @click="openForm"
       class="fixed z-50 bottom-24 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
-    <UModal v-model="isOpen">
+    <UModal v-model="isOpen" fullscreen>
       <div class="p-4">
-        <h1 class="text-2xl font-bold">Dodaj</h1>
+        <div class="flex items-center justify-between ">
+          <h1 class="text-2xl font-bold">Dodaj</h1>
+          <UButton icon="i-material-symbols-cancel-outline-rounded" @click="isOpen = false"
+            class="absolute top-4 right-4" />
+        </div>
         <UForm :schema="formSchema" :state="formState" @submit="onSubmit" class="space-y-4">
           <UFormGroup label="Materiał" name="assetId">
             <USelect v-if="assets" v-model="formState.assetId" option-attribute="name" :options="assets.map(asset => {

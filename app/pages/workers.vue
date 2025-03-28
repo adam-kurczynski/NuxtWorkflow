@@ -16,9 +16,14 @@
         </div>
       </UCard>
     </div>
-    <UModal v-model="isOpen">
+    <UModal v-model="isOpen" fullscreen>
       <div class="p-4">
-        <h1 class="text-2xl font-bold">Dodaj pracownika</h1>
+        <div class="flex items-center justify-between ">
+          <h1 class="text-2xl font-bold">Dodaj Pracownika</h1>
+          <UButton icon="i-material-symbols-cancel-outline-rounded" @click="isOpen = false"
+            class="absolute top-4 right-4" />
+        </div>
+
         <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
           <UFormGroup label="Imię i nazwisko" name="name">
             <UInput v-model="state.name" />
