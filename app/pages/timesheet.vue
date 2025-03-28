@@ -61,7 +61,7 @@ import countLoggedTime from "~~/utils/countLoggedTime";
 definePageMeta({
   title: "Twój kalendarz",
   description: "Timesheet",
-  //middleware: ["auth"],
+  middleware: ["auth"],
 })
 
 const isOpen = ref(false);
