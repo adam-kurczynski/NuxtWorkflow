@@ -1,78 +1,76 @@
 <template>
-  <div class="space-y-4 p-2">
-    <UForm :schema="schema" :state="state" @submit="refresh" class="space-y-4">
-      <UFormField label="Materiał" name="assetId">
-        <USelect v-if="assets" v-model="state.assetId" option-attribute="name" class="w-full"
-          :items="prepareAssetsDropdown(assets)" />
-      </UFormField>
-      <UFormField label="Projekt" name="projectId">
-        <USelect v-if="projects" v-model="state.projectId" option-attribute="name" class="w-full"
-          :items="prepareProjectsDropdown(projects)" />
-      </UFormField>
-      <UFormField label="Czas dodania od" name="startTime">
-        <UInput v-model="state.startDate" type="date" class="w-full" />
-      </UFormField>
-      <UFormField label="Czas dodania do" name="endTime">
-        <UInput v-model="state.endDate" type="date" class="w-full" />
-      </UFormField>
-      <UButton type="submit" class="w-full flex-row justify-center">
-        Szukaj
-      </UButton>
-    </UForm>
+  <UForm :schema="schema" :state="state" @submit="refresh" class="space-y-4 flex gap-2 flex-col">
+    <UFormField label="Materiał" name="assetId">
+      <USelect v-if="assets" v-model="state.assetId" option-attribute="name" class="w-full"
+        :items="prepareAssetsDropdown(assets)" />
+    </UFormField>
+    <UFormField label="Projekt" name="projectId">
+      <USelect v-if="projects" v-model="state.projectId" option-attribute="name" class="w-full"
+        :items="prepareProjectsDropdown(projects)" />
+    </UFormField>
+    <UFormField label="Czas dodania od" name="startTime">
+      <UInput v-model="state.startDate" type="date" class="w-full" />
+    </UFormField>
+    <UFormField label="Czas dodania do" name="endTime">
+      <UInput v-model="state.endDate" type="date" class="w-full" />
+    </UFormField>
+    <UButton type="submit" class="w-full flex-row justify-center">
+      Szukaj
+    </UButton>
+  </UForm>
 
-    <UModal v-model:open="isOpen" fullscreen title="Dodaj materiał">
-      <UButton icon="i-material-symbols-add-2" @click="openForm"
-        class="fixed z-50 bottom-24 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
-      <template #body>
-        <UForm :schema="formSchema" :state="formState" @submit="onSubmit" class="space-y-4">
-          <UFormField label="Materiał" name="assetId">
-            <USelect v-if="assets" class="w-full" v-model="formState.assetId" option-attribute="name" :items="assets.map(asset => {
-              return {
-                label: asset.name,
-                value: asset.id
-              }
-            })" />
-          </UFormField>
-          <UFormField label="Projekt" name="projectId">
-            <USelect v-if="projects" class="w-full" v-model="formState.projectId" option-attribute="name" :items="projects.map(project => {
-              return {
-                label: project.projects.name,
-                value: project.projects.id
-              }
-            })" />
-          </UFormField>
-          <UFormField label="Ilość" name="quantity">
-            <div class="flex justify-between items-center">
-              <UInput v-model="formState.quantity" class="w-full" />
-              <p class="pl-2">{{ currUnit }}</p>
-            </div>
-          </UFormField>
-          <UButton type="submit" class="w-full flex-row justify-center">
-            Dodaj
-          </UButton>
-        </UForm>
-      </template>
-    </UModal>
-    <div v-if="materialsUsage?.length" class="space-y-4">
-      <h1>{{ `Znaleziono ${materialsUsage.length} pozycji` }}</h1>
-      <UCard v-for="material in materialsUsage" :key="material.asset_usage.id" class="relative">
-        <UButton icon="i-material-symbols-delete-rounded" @click="deleteMaterial(material.asset_usage.id)"
-          class="absolute top-2 right-2 w-8 h-8 flex justify-center" />
-        <div class="flex justify-between">
-          <div>
-            <h1 class="text-xl font-bold">{{ material.assets?.name }}</h1>
-            <p>{{ material.projects?.name }}</p>
+  <UModal v-model:open="isOpen" fullscreen title="Dodaj materiał">
+    <UButton icon="i-material-symbols-add-2" @click="openForm"
+      class="fixed z-50 bottom-24 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
+    <template #body>
+      <UForm :schema="formSchema" :state="formState" @submit="onSubmit" class="space-y-4">
+        <UFormField label="Materiał" name="assetId">
+          <USelect v-if="assets" class="w-full" v-model="formState.assetId" option-attribute="name" :items="assets.map(asset => {
+            return {
+              label: asset.name,
+              value: asset.id
+            }
+          })" />
+        </UFormField>
+        <UFormField label="Projekt" name="projectId">
+          <USelect v-if="projects" class="w-full" v-model="formState.projectId" option-attribute="name" :items="projects.map(project => {
+            return {
+              label: project.projects.name,
+              value: project.projects.id
+            }
+          })" />
+        </UFormField>
+        <UFormField label="Ilość" name="quantity">
+          <div class="flex justify-between items-center">
+            <UInput v-model="formState.quantity" class="w-full" />
+            <p class="pl-2">{{ currUnit }}</p>
           </div>
-          <div>
-            <p>{{ material.asset_usage.quantity + " " + material.assets?.unit }}</p>
-            <p>{{ formatDateTime(material.asset_usage.createdAt) }}</p>
-          </div>
+        </UFormField>
+        <UButton type="submit" class="w-full flex-row justify-center">
+          Dodaj
+        </UButton>
+      </UForm>
+    </template>
+  </UModal>
+  <div v-if="materialsUsage?.length" class="space-y-4">
+    <h1>{{ `Znaleziono ${materialsUsage.length} pozycji` }}</h1>
+    <UCard v-for="material in materialsUsage" :key="material.asset_usage.id" class="relative">
+      <UButton icon="i-material-symbols-delete-rounded" @click="deleteMaterial(material.asset_usage.id)"
+        class="absolute top-2 right-2 w-8 h-8 flex justify-center" />
+      <div class="flex justify-between">
+        <div>
+          <h1 class="text-xl font-bold">{{ material.assets?.name }}</h1>
+          <p>{{ material.projects?.name }}</p>
         </div>
-      </UCard>
-    </div>
-    <div v-else>
-      <p>Brak danych</p>
-    </div>
+        <div>
+          <p>{{ material.asset_usage.quantity + " " + material.assets?.unit }}</p>
+          <p>{{ formatDateTime(material.asset_usage.createdAt) }}</p>
+        </div>
+      </div>
+    </UCard>
+  </div>
+  <div v-else>
+    <p>Brak danych</p>
   </div>
 </template>
 

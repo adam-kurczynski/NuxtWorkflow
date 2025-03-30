@@ -1,6 +1,6 @@
 <template>
   <client-only>
-    <VCalendar locale="pl" @did-move="monthChanged" @dayclick="dayChanged" :attributes="attrs" />
+    <VCalendar locale="pl" @did-move="monthChanged" @dayclick="dayChanged" :attributes="attrs.concat(timeOffsAttr)" />
   </client-only>
   <h1 v-if="monthLogs?.length" class="text-center">{{ parseDecimalToTime(countLoggedTime(monthLogs)) + ` zalogowanych
     w tym miesiącu`}} </h1>
@@ -16,10 +16,13 @@
   <UCard v-if="dayLogs.length === 0 && currDate">
     <p>Brak zalogowanych godzin w tym dniu</p>
   </UCard>
+  <UButton icon="i-material-symbols-add-2"
+    class="bottom-24 fixed z-50 right-8 w-36 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]"
+    @click="openForm">
+    Dodaj godziny</UButton>
 
   <UModal v-model:open="isOpen" fullscreen title="Dodaj godziny">
-    <UButton icon="i-material-symbols-add-2"
-      class="bottom-24 fixed z-50 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
+
     <template #body>
       <div class="p-4">
         <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
@@ -45,19 +48,22 @@
       </div>
     </template>
   </UModal>
+  <TimeOffForm @submit="refreshTimeOff" />
 </template>
 
 <script lang="ts" setup>
 import { object, string, number, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 import getFirstAndLastDay from "~~/utils/getFirstAndLastDay";
-import type { TimelogResponse, User } from "~~/server/api/types";
+import type { TimelogResponse, TimeOffResponse } from "~~/server/api/types";
 import formatDate from "~~/utils/formatDate";
 import formatDateTime from "~~/utils/formatDateTime";
 import buildDateTime from "~~/utils/buildDateTime";
 import checkTimes from "~~/utils/checkTimes";
 import parseDecimalToTime from "~~/utils/parseDecimalToTime";
 import countLoggedTime from "~~/utils/countLoggedTime";
+import { yourHighlight, otherHighlight } from "~~/utils/calendarConfig.ts";
+import { popover } from "#build/ui";
 
 definePageMeta({
   title: "Twój kalendarz",
@@ -71,6 +77,7 @@ const queryStartDate = ref(getFirstAndLastDay(new Date()).firstDay)
 const queryEndDate = ref(getFirstAndLastDay(new Date()).lastDay)
 const currDate = ref();
 const attrs = ref([]);
+const timeOffsAttr = ref([]);
 const dayLogs = ref([] as TimelogResponse[]);
 const toast = useToast();
 const { user } = useUserSession()
@@ -83,15 +90,35 @@ const { data: monthLogs, refresh: refreshMonth } = await useFetch<TimelogRespons
   },
   onResponse({ response }) {
     attrs.value = response._data.map((item: TimelogResponse) => {
-
       return {
         key: item.user_timelog.id,
-        dot: "success",
+        content: "green",
         dates: [new Date(item.user_timelog.startTime)],
       }
     })
   },
   server: false
+});
+
+const { refresh: refreshTimeOff } = await useFetch<TimeOffResponse[]>(`/api/time-off`, {
+  query: {
+    startTime: queryStartDate,
+    endTime: queryEndDate
+  },
+  server: false,
+  onResponse({ response }) {
+    timeOffsAttr.value = response._data.map((item: TimeOffResponse) => {
+      return {
+        key: item.time_off.id,
+        dot: user.value.id === item.time_off.userId ? 'green' : 'yellow',
+        dates: { start: new Date(item.time_off.startTime), end: new Date(item.time_off.endTime) },
+        popover: {
+          label: user.value.id === item.time_off.userId ? "Twoje dni wolne" : "Dni wolne " + item.users?.username,
+          visibility: 'focus'
+        }
+      }
+    })
+  }
 });
 
 const { data: projects } = await useFetch("/api/projects");
@@ -139,6 +166,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     toast.add({
       title: "Błąd",
       description: error.statusMessage || "Nie udało się dodać godzin",
+      color: "error",
     });
   }
 }
@@ -157,6 +185,7 @@ const deleteLog = async (id: number) => {
     toast.add({
       title: "Błąd",
       description: "Nie udało się usunąć godzin",
+      color: "error",
     });
   }
 }

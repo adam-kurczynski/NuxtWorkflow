@@ -1,3 +1,5 @@
+import {gte, lte} from 'drizzle-orm'
+import { timeOff } from '~~/server/database/schema'
 export default eventHandler(async (event) => {
   const { user } = await requireUserSession(event)
   if (!user) {
@@ -23,6 +25,33 @@ export default eventHandler(async (event) => {
     throw  createError({
         statusCode: 400,
         statusMessage: 'Godziny kolidują z innym wpisem',
+    })
+  }
+  //check if timesheet doesn't collide with time off
+  console.log('time', startTime, endTime)
+  const timeOffs = await useDrizzle()
+  .select()
+  .from(tables.timeOff)
+  .where(and(
+    eq(tables.timeOff.userId, userId),
+    lte(tables.timeOff.startTime, new Date(startTime)),
+    gte(tables.timeOff.endTime, new Date(endTime))
+  )).all()
+  if (timeOffs.length > 0) {
+    throw  createError({
+        statusCode: 400,
+        statusMessage: 'Godziny koliduja z urlopem',
+    })
+  }
+  
+  //check if timesheet in not before two weeks
+  const now = new Date()
+  const twoWeeksAgo = new Date()
+  twoWeeksAgo.setDate(now.getDate() - 14)
+  if (new Date(startTime) < twoWeeksAgo) {
+    throw  createError({
+        statusCode: 400,
+        statusMessage: 'Nie mozna dodac wpisu starszego niz 14 dni',
     })
   }
 

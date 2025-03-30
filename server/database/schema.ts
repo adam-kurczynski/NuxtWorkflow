@@ -54,3 +54,11 @@ export const userTimelog = sqliteTable('user_timelog', {
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 })
 
+export const timeOff = sqliteTable('time_off', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  userId: integer('user_id').notNull(),
+  startTime: integer('start_time', { mode: 'timestamp' }).notNull(),
+  endTime: integer('end_time', { mode: 'timestamp' }).notNull(),
+  createdTime: integer('created_time', { mode: 'timestamp' }).notNull(),
+})
+

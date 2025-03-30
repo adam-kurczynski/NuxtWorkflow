@@ -76,3 +76,21 @@ export type AssetUsageResponse = {
     } | null;
 
 }
+
+export type TimeOffResponse = {
+    time_off: {
+        id: number;
+        userId: number;
+        startTime: Date;
+        endTime: Date;
+        createdTime: Date;
+    };
+    users: {
+        id: number;
+        email: string;
+        lastName: string;
+        createdAt: Date;
+        name: string;
+        username: string;
+    } | null;
+}

@@ -15,3 +15,4 @@ export type Project = typeof schema.projects.$inferSelect
 export type Asset = typeof schema.assets.$inferSelect
 export type AssetUsage = typeof schema.assetUsage.$inferSelect
 export type UserTimelog = typeof schema.userTimelog.$inferSelect
+export type TimeOff = typeof schema.timeOff.$inferSelect

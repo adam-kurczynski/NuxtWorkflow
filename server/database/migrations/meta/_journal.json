@@ -57,6 +57,13 @@
       "when": 1738330955670,
       "tag": "0007_exotic_cobalt_man",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1743341301946,
+      "tag": "0008_famous_winter_soldier",
+      "breakpoints": true
     }
   ]
 }
