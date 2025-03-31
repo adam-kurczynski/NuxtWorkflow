@@ -3,7 +3,19 @@ export default eventHandler(async (event) => {
   if (!user) {
     throw new Error('Unauthorized')
   }
-  const { search }: {search: string} = getQuery(event)
+  const { search, id }: {search: string, id: string} = getQuery(event)
+
+  const idParsed = parseInt(id)
+
+  if (idParsed) {
+    const project = await useDrizzle() 
+    .select()
+    .from(tables.projects)
+    .leftJoin(tables.clients, eq(tables.projects.clientId, tables.clients.id))
+    .where(eq(tables.projects.id, idParsed))
+    .get()
+    return project
+  }
   if (search) {
     const projects = await useDrizzle()
     .select()

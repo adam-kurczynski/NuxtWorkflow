@@ -15,8 +15,7 @@
     </UCard>
   </div>
   <UModal v-model:open="isOpen" fullscreen title="Dodaj pracownika">
-    <UButton icon="i-material-symbols-add-2" @click="addWorker"
-      class="fixed z-50 bottom-24 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
+    <AddFormButton @click="addWorker" />
     <template #body>
 
       <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">

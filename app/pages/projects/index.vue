@@ -3,14 +3,17 @@
   <UCard v-if="data" v-for="projectData in data" :key="projectData.projects.id" class="mb-2">
     <div class="flex justify-between">
       <h1 class="text-xl font-bold">{{ projectData.projects.name }}</h1>
+      <UButton class="flex items-center justify-center " icon="i-material-symbols-edit"
+        @click="navigateTo(`/projects/${projectData.projects.id}`)">
+        Szczegóły</UButton>
     </div>
     <p>{{ projectData.projects.description }}</p>
     <p v-if="projectData.clients">{{ projectData.clients.name }}</p>
+
   </UCard>
 
   <UModal v-model:open="isOpen" title="Dodaj projekt" fullscreen class="p-4">
-    <UButton icon="i-material-symbols-add-2"
-      class="fixed z-50 bottom-24 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
+    <AddFormButton />
     <template #body>
       <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
         <UFormField required label="Nazwa" name="name">
@@ -39,6 +42,7 @@
 import { ref, reactive } from "vue";
 import { object, string, number, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
+import type { ProjectResponse } from "~~/server/api/types";
 
 definePageMeta({
   title: "Projekty",
@@ -47,10 +51,11 @@ definePageMeta({
 })
 
 const toast = useToast();
+const router = useRouter();
 
 const search = ref("");
 
-const { data, refresh } = await useFetch("/api/projects", {
+const { data, refresh } = await useFetch<ProjectResponse[]>("/api/projects", {
   query: {
     search: search
   }

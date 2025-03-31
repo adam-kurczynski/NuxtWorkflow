@@ -7,8 +7,7 @@
   </UCard>
 
   <UModal v-model:open="isOpen" fullscreen class="p-4" title="Dodaj klienta">
-    <UButton icon="i-material-symbols-add-2"
-      class="fixed z-50 bottom-24 right-8 w-12 h-12 flex justify-center shadow-[0px_0px_12px_6px_rgba(34,197,94,1)]" />
+    <AddFormButton />
     <template #body>
       <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
         <UFormField label="Nazwa" name="name">

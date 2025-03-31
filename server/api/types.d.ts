@@ -94,3 +94,27 @@ export type TimeOffResponse = {
         username: string;
     } | null;
 }
+
+export type ProjectResponse = {
+    projects: {
+        id: number;
+        name: string;
+        description: string | null;
+        clientId: number;
+        createdAt: Date;
+        status: string;
+    };
+    clients: {
+        id: number;
+        name: string;
+        address: Date;
+        phone: string | null;
+    } | null;
+}
+
+export type AggregatedUsageResponse = {
+    assetId: number;
+    quantity: number;
+    assetName: string;
+    unit: string;
+}
