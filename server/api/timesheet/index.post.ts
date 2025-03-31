@@ -28,7 +28,6 @@ export default eventHandler(async (event) => {
     })
   }
   //check if timesheet doesn't collide with time off
-  console.log('time', startTime, endTime)
   const timeOffs = await useDrizzle()
   .select()
   .from(tables.timeOff)

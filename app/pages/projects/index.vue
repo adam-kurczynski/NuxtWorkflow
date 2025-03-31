@@ -9,9 +9,7 @@
     </div>
     <p>{{ projectData.projects.description }}</p>
     <p v-if="projectData.clients">{{ projectData.clients.name }}</p>
-
   </UCard>
-
   <UModal v-model:open="isOpen" title="Dodaj projekt" fullscreen class="p-4">
     <AddFormButton />
     <template #body>
