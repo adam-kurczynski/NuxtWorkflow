@@ -9,7 +9,7 @@
   <UModal v-model:open="isOpen" fullscreen class="p-4" title="Dodaj klienta">
     <AddFormButton />
     <template #body>
-      <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
+      <UForm :schema="schema" :state="state" @submit="createClient" class="space-y-4">
         <UFormField label="Nazwa" name="name">
           <UInput v-model="state.name" class="w-full" />
         </UFormField>
@@ -29,8 +29,6 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from "vue";
-import { object, string, type InferType } from "yup";
-import type { FormSubmitEvent } from "#ui/types";
 
 definePageMeta({
   title: "Klienci",
@@ -38,51 +36,25 @@ definePageMeta({
   middleware: ["auth"],
 })
 
-
 const isOpen = ref(false);
-const search = ref("");
-const toast = useToast();
-const { data, refresh } = await useFetch("/api/clients", {
-  query: {
-    search: search
-  }
-});
-
-const schema = object({
-  name: string().required("Pole wymagane"),
-  address: string().required("Pole wymagane"),
-  phone: string().required("Pole wymagane")
-})
-
-type Schema = InferType<typeof schema>;
 
 const state = reactive({
-  name: undefined,
-  address: undefined,
-  phone: undefined
+  name: '',
+  address: '',
+  phone: ''
 })
 
-const onSubmit = async (event: FormSubmitEvent<Schema>) => {
-
-  try {
-    await $fetch("/api/clients", {
-      method: "POST",
-      body: event.data
-    });
-    isOpen.value = false;
-    refresh();
-    toast.add({
-      title: "Dodano klienta",
-      color: "success"
-    })
-  } catch (error) {
-    toast.add({
-      title: "Nie udało się dodać klienta",
-      color: "error"
-    })
-
-  }
+const onSuccessfulSubmit = () => {
+  isOpen.value = false;
+  state.name = '';
+  state.address = '';
+  state.phone = '';
+  refresh()
 }
+
+const { data, search, createClient, refresh, schema } = useClients(onSuccessfulSubmit);
+
+
 
 </script>
 

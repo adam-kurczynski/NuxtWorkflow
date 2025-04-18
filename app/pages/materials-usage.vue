@@ -43,8 +43,7 @@
 </template>
 
 <script lang="ts" setup>
-import { object, string, number, type InferType } from 'yup'
-import type { AssetUsageResponse } from '~~/server/api/types'
+import type { ProjectResponse, Asset } from '~~/server/api/types'
 import formatDateTime from '~~/utils/formatDateTime'
 
 definePageMeta({
@@ -53,56 +52,10 @@ definePageMeta({
   middleware: ['auth']
 })
 
-const getPreviousMonthDate = () => {
-  const date = new Date()
-  date.setMonth(date.getMonth() - 1)
-  return date.toISOString().split('T')[0]
-}
+const { data: projects } = await useFetch<ProjectResponse[]>('/api/projects')
+const { data: assets } = await useFetch<Asset[]>('/api/assets')
 
-
-const state = reactive({
-  projectId: 0,
-  assetId: 0,
-  startDate: getPreviousMonthDate(),
-  endDate: new Date().toISOString().split('T')[0],
-})
-
-const schema = object({
-  projectId: number().required("Pole wymagane"),
-  assetId: number().required('Pole wymagane'),
-  startDate: string().required('Pole wymagane'),
-  endDate: string().required('Pole wymagane')
-})
-
-const Toast = useToast()
-const { data: projects } = await useFetch('/api/projects')
-const { data: assets } = await useFetch('/api/assets')
-
-const getURL = computed(() => `/api/usage?projectId=${state.projectId}&assetId=${state.assetId}&startDate=${state.startDate}&endDate=${state.endDate}`)
-
-const { data: materialsUsage, error, refresh } = useFetch<AssetUsageResponse[]>(getURL, {
-  watch: false,
-})
-
-const deleteMaterial = async (id: number) => {
-  try {
-    await $fetch(`/api/usage?id=${id}`, {
-      method: 'DELETE'
-    })
-    Toast.add({
-      title: 'Usunięto',
-      description: 'Usunięto materiał',
-      color: 'success'
-    })
-    refresh()
-  } catch (error) {
-    Toast.add({
-      title: 'Wystąpił błąd',
-      description: 'Błąd podczas usuwania materiału',
-      color: 'error'
-    })
-  }
-}
+const { materialsUsage, state, schema, refresh, deleteMaterial } = useUsage()
 
 const prepareAssetsDropdown = (assets: any[]) => {
   const out = assets.map(asset => {

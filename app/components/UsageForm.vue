@@ -2,7 +2,7 @@
   <UModal v-model:open="isOpen" fullscreen title="Dodaj materiał">
     <AddFormButton @click="openForm" :text="buttonText" />
     <template #body>
-      <UForm :schema="formSchema" :state="formState" @submit="onSubmit" class="space-y-4">
+      <UForm :schema="formSchema" :state="formState" @submit="createUsage" class="space-y-4">
         <UFormField label="Materiał" name="assetId">
           <USelect v-if="assets" class="w-full" v-model="formState.assetId" option-attribute="name" :items="assets.map(asset => {
             return {
@@ -36,38 +36,28 @@
 <script lang="ts" setup>
 import type { FormSubmitEvent } from '#ui/types'
 import { object, string, number, type InferType } from 'yup'
+import type { ProjectResponse, Asset } from '~~/server/api/types'
 
 const props = defineProps({
   showProjectsDropdown: Boolean,
   projectId: Number,
   buttonText: String
 })
+
 const emit = defineEmits(['submit'])
 
-const { data: projects } = await useFetch('/api/projects')
-const { data: assets } = await useFetch('/api/assets')
+const { data: projects } = await useFetch<ProjectResponse[]>('/api/projects')
+const { data: assets } = await useFetch<Asset[]>('/api/assets')
 
-const { user } = useUserSession()
-const Toast = useToast()
 const isOpen = ref(false)
 const currUnit = ref('')
 
-const formState = reactive({
-  projectId: undefined,
-  assetId: undefined,
-  quantity: undefined
-})
+const onCreateSuccess = () => {
+  isOpen.value = false
+  emit('submit')
+}
 
-const formSchema = props.showProjectsDropdown ? object({
-  projectId: number().required("Pole wymagane"),
-  assetId: number().required("Pole wymagane"),
-  quantity: number().required("Pole wymagane")
-}) :
-  object({
-    assetId: number().required("Pole wymagane"),
-    quantity: number().required("Pole wymagane")
-  })
-
+const { formState, formSchema, createUsage } = useUsage(onCreateSuccess, props.showProjectsDropdown, props.projectId)
 const openForm = () => {
   isOpen.value = true
 
@@ -84,34 +74,7 @@ const getUnit = () => {
 }
 
 
-const onSubmit = async (event: FormSubmitEvent<InferType<typeof formSchema>>) => {
-  event.preventDefault()
-  if (user.value === null) return
-  const body = event.data
-  try {
-    await $fetch('/api/usage', {
-      method: 'POST',
-      body: JSON.stringify({
-        projectId: props.showProjectsDropdown ? body.projectId : props.projectId,
-        assetId: body.assetId,
-        quantity: body.quantity,
-        addedBy: user.value.id
-      })
-    })
-    Toast.add({
-      title: 'Dodano',
-      description: 'Dodano materiał',
-      color: 'success'
-    })
-    emit('submit')
-  } catch (error) {
-    Toast.add({
-      title: 'Wystąpił błąd',
-      description: 'Błąd podczas dodawania materiału',
-      color: 'error'
-    })
-  }
-}
+
 
 
 

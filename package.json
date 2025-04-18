@@ -9,8 +9,10 @@
     "deploy": "npx nuxthub deploy",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "typecheck": "nuxt typecheck",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "_prepare": "husky"
   },
   "dependencies": {
     "@nuxt/eslint": "^0.7.5",
@@ -36,6 +38,7 @@
     "@nuxt/eslint-config": "^0.7.5",
     "drizzle-kit": "^0.30.3",
     "eslint": "^9.18.0",
+    "husky": "^9.1.7",
     "sass-embedded": "^1.83.4",
     "vue-tsc": "^2.2.0",
     "wrangler": "3.103.2"
