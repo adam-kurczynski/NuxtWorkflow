@@ -15,6 +15,10 @@
       size="xl" class="gallery-item">
       Zmiana hasła
     </UButton>
+    <UButton @click="goToTimeoffs" variant="outline" icon="i-material-symbols-timer-off-outline-rounded"
+      size="xl" class="gallery-item">
+      Urlopy
+    </UButton>
   </div>
 </template>
 
@@ -32,6 +36,10 @@ const router = useRouter();
 
 const goToTimesheet = () => {
   router.push({ name: 'all-timesheets' });
+}
+
+const goToTimeoffs = () => {
+  router.push({name: 'timeoffs'})
 }
 
 const goToMaterials = () => {
