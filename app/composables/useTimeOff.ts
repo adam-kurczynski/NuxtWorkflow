@@ -34,20 +34,6 @@ export const useTimeOff = (onSuccessfulSubmit: Function) => {
       });
       return;
     }
-    if (startDate < new Date()) {
-      toast.add({
-        title: "Data rozpoczęcia nie może być wcześniejsza niż dzisiaj",
-        color: "error",
-      });
-      return;
-    }
-    if (endDate < new Date()) {
-      toast.add({
-        title: "Data zakończenia nie może być wcześniejsza niż dzisiaj",
-        color: "error",
-      });
-      return;
-    }
     try {
       await $fetch("/api/time-off", {
         method: "POST",
