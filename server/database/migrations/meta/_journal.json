@@ -71,6 +71,13 @@
       "when": 1744973481450,
       "tag": "0009_left_carnage",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1751367027113,
+      "tag": "0010_icy_imperial_guard",
+      "breakpoints": true
     }
   ]
 }

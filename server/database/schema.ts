@@ -61,3 +61,8 @@ export const timeOff = sqliteTable("time_off", {
   endTime: integer("end_time", { mode: "timestamp" }).notNull(),
   createdTime: integer("created_time", { mode: "timestamp" }).notNull(),
 });
+
+export const config = sqliteTable('config', {
+  id: integer("id").primaryKey({ autoIncrement: false }),
+  isRestrictionDisabled: integer("is_restriction_disabled")
+})

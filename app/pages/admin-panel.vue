@@ -33,7 +33,7 @@ definePageMeta({
 const { user } = useUserSession();
 const isAdmin = user.value?.role === "admin";
 const router = useRouter();
-
+const { data: isLoggingRestrictionDisabled} = useFetch<Boolean>('api/config')
 const goToTimesheet = () => {
   router.push({ name: 'all-timesheets' });
 }
