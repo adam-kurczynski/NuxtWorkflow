@@ -45,12 +45,24 @@ export default eventHandler(async (event) => {
   
   //check if timesheet in not before two weeks
   const now = new Date()
-  const twoWeeksAgo = new Date()
-  twoWeeksAgo.setDate(now.getDate() - 14)
-  if (new Date(startTime) < twoWeeksAgo) {
+  let timePeriod = 14
+  const timeRestriction = new Date()
+
+  const config = await useDrizzle() 
+  .select()
+  .from(tables.config)
+  .get()
+
+  if (config) {
+    timePeriod = config.isRestrictionDisabled === 1 ? 60 : 14
+  }
+
+
+  timeRestriction.setDate(now.getDate() - timePeriod)
+  if (new Date(startTime) < timeRestriction) {
     throw  createError({
         statusCode: 400,
-        statusMessage: 'Nie mozna dodac wpisu starszego niz 14 dni',
+        statusMessage: 'Nie mozna dodac wpisu starszego niz ' + timePeriod + ' dni' ,
     })
   }
 

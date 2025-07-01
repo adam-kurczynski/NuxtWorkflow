@@ -19,10 +19,12 @@
       size="xl" class="gallery-item">
       Urlopy
     </UButton>
+    <USwitch :loading="isLoading" v-on:update:model-value="onSwitchChange" size="xl" v-model="switchEnabled" label="Wyłącz ograniczenia w logowaniu godzin"></USwitch>
   </div>
 </template>
 
 <script lang="ts" setup>
+
 
 definePageMeta({
   title: 'Konfiguracja',
@@ -31,9 +33,42 @@ definePageMeta({
 })
 
 const { user } = useUserSession();
+const toast = useToast()
+const isLoading = ref(false)
 const isAdmin = user.value?.role === "admin";
 const router = useRouter();
-const { data: isLoggingRestrictionDisabled} = useFetch<Boolean>('api/config')
+const switchEnabled  = ref(false as boolean)
+const { data: isLoggingRestrictionDisabled, refresh} = useFetch<Boolean>('/api/config', {
+  onResponse({ response }) {
+      switchEnabled.value = response._data
+      isLoading.value = false
+    }
+  })
+
+const onSwitchChange = async (value: boolean) => {
+  isLoading.value = true
+  try {
+    await $fetch("/api/config", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        enable: value
+      })
+    })
+    isLoading.value = false
+  } 
+  catch (error) {
+    refresh()
+    toast.add({
+      title: "Wystąpił błąd"
+    })
+  }
+}
+
+  
+
 const goToTimesheet = () => {
   router.push({ name: 'all-timesheets' });
 }
