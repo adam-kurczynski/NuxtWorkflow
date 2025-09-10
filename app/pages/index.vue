@@ -1,105 +1,71 @@
 <template>
-  <main>
-    <div class="flex flex-col items-center space-y-4 p-2">
-      <p>W tym miesiącu zalogowałeś {{ parseDecimalToTime(countLoggedTime(data)) }}</p>
-      <UProgress v-model="loggedTime" />
-
-      <UModal v-model:open="isOpen" fullscreen title="Dodaj godziny">
-        <UButton>Dodaj dzisiejszy czas</UButton>
-        <template #body>
-          <div class="p-4">
-            <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4 flex justify-center flex-col">
-              <UFormField label="Projekt" name="projectId">
-                <USelect class="w-full" placeholder="Wybierz projekt" v-if="projects" v-model="state.projectId"
-                  option-attribute="name" :items="projects.map(project => {
-                    return {
-                      label: project.projects.name,
-                      value: project.projects.id
-                    }
-                  })" />
-              </UFormField>
-              <UFormField label="Czas rozpoczęcia" name="startTime">
-                <UInput class="w-full" v-model="state.startTime" type="time" />
-              </UFormField>
-              <UFormField label="Czas zakończenia" name="endTime">
-                <UInput class="w-full" v-model="state.endTime" type="time" />
-              </UFormField>
-              <UButton type="submit" class="w-full flex-row justify-center">
-                Dodaj
-              </UButton>
-            </UForm>
-          </div>
-        </template>
-      </UModal>
-    </div>
+  <main class="flex flex-col gap-4">
+    <BasicInfoCard
+      title="Wszystkie projekty"
+      :bold="projects?.length || 0"
+      description="Aktywnych projektów"
+      icon="i-material-symbols-folder-outline-rounded"
+    />
+    <BasicInfoCard
+      title="Wszyscy pracownicy"
+      :bold="users?.length || 0"
+      description="Zarejestrowanych użytkowników"
+      icon="i-material-symbols-user-attributes-outline-rounded"
+    />
+    <BasicInfoCard
+      title="Zalogowane godziny w tym miesiącu"
+      :bold="parseDecimalToTime(countLoggedTime(timesheets || 0))"
+      :description="
+        isAdmin
+          ? 'Suma przepracowanych godzin wszystkich użytkowników'
+          : 'Suma Twoich przepracowanych godzin'
+      "
+      icon="i-material-symbols-calendar-clock-outline-rounded"
+    />
+    <BasicInfoCard
+      title="Utworzeni klienci"
+      :bold="clients?.length || 0"
+      description="Wszystkich klientów"
+      icon="i-material-symbols-person-4-outline-rounded"
+    />
+    <RecentActivity />
   </main>
 </template>
 
 <script setup lang="ts">
-
-import { ref, reactive } from "vue";
-import countLoggedTime from "~~/utils/countLoggedTime";
-import getFirstAndLastDay from '~~/utils/getFirstAndLastDay';
-import { object, string, number, type InferType } from "yup";
-import type { FormSubmitEvent } from "#ui/types";
-import buildTodayDate from "~~/utils/buildTodayDate";
+import BasicInfoCard from "~/components/BasicInfoCard.vue";
+import type { ProjectResponse, TimelogResponse } from "~~/server/api/types";
 import parseDecimalToTime from "~~/utils/parseDecimalToTime";
-import type { TimelogResponse } from "~~/server/api/types";
+import countLoggedTime from "~~/utils/countLoggedTime";
+import getFirstAndLastDay from "~~/utils/getFirstAndLastDay";
+import type { Client } from "~~/server/utils/drizzle";
 
 definePageMeta({
-  title: "Home",
-  description: "Dashboard page",
-  name: "dashboard",
-  layout: "default",
-  middleware: "auth"
-})
+  title: "Panel główny",
+  description: "Przglądaj statystyki i aktywność",
+  middleware: ["auth"],
+  colorMode: "dark",
+});
 
+const { firstDay, lastDay } = getFirstAndLastDay(new Date());
+const firstDayOfMonth = firstDay.split("T")[0];
+const lastDayOfMonth = lastDay.split("T")[0];
 const { user } = useUserSession();
-const isOpen = ref(false);
+const isAdmin = user.value?.role === "admin";
 
-type Schema = InferType<typeof schema>;
+const { data: projects } = await useFetch<ProjectResponse[]>("/api/projects");
+const { data: users } = await useFetch<User[]>("/api/users");
+const { data: clients } = await useFetch<Client[]>("/api/clients");
 
-const loggedTime = ref(0);
-const { data, refresh } = await useFetch(`/api/timesheet?startTime=${getFirstAndLastDay(new Date).firstDay}&endTime=${getFirstAndLastDay(new Date).lastDay}&userId=${user.value.id}`, {
-  onResponse({ request, response, options }) {
-    if (response._data) {
-      loggedTime.value = countLoggedTime(response._data) / 160 * 100;
-    }
+const { data: timesheets } = await useFetch<TimelogResponse[]>(
+  "api/timesheet",
+  {
+    query: {
+      startTime: firstDayOfMonth,
+      endTime: lastDayOfMonth,
+      userId: isAdmin ? 0 : user.value.id,
+    },
+    server: false,
   }
-});
-const { data: projects } = await useFetch("/api/projects");
-
-const state = reactive({
-  projectId: undefined,
-  startTime: '07:00',
-  endTime: '17:00'
-});
-
-const schema = object({
-  projectId: number().required("Pole wymagane"),
-  startTime: string().required("Pole wymagane"),
-  endTime: string().required("Pole wymagane"),
-});
-
-const onSubmit = async (event: FormSubmitEvent<Schema>) => {
-  if (!user.value) {
-    return;
-  }
-  try {
-    await $fetch("/api/timesheet", {
-      method: "POST",
-      body: {
-        startTime: buildTodayDate(event.data.startTime),
-        endTime: buildTodayDate(event.data.endTime),
-        projectId: event.data.projectId,
-        userId: user.value.id
-      }
-    });
-    isOpen.value = false;
-    refresh();
-  } catch (error) {
-    alert(error.statusMessage || error);
-  }
-};
-
+);
 </script>

@@ -30,6 +30,7 @@ definePageMeta({
   title: 'Konfiguracja',
   description: 'Panel administracyjny',
   middleware: 'auth',
+  colorMode: 'dark'
 })
 
 const { user } = useUserSession();

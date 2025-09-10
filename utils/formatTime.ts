@@ -1,24 +1,27 @@
 export default (time: Date | string) => {
-  if (typeof time === 'string') {
-    time = new Date(time)
+  if (typeof time === "string") {
+    time = new Date(time);
   }
   const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
     hour12: false,
-  }
-  const formatter = new Intl.DateTimeFormat('en-US', options)
-  const parts = formatter.formatToParts(time)
-  const dateParts: Record<string, string> = {}
+  };
+  const formatter = new Intl.DateTimeFormat("en-US", options);
+  const parts = formatter.formatToParts(time);
+  const dateParts: Record<string, string> = {};
   for (const part of parts) {
-    if (part.type !== 'literal') {
-      dateParts[part.type] = part.value
+    if (part.type !== "literal") {
+      dateParts[part.type] = part.value;
     }
   }
-  const formattedDate = `${dateParts.hour}:${dateParts.minute}:${dateParts.second}`
-  return formattedDate
-}
+  const formattedDate =
+    dateParts.minute === "0m"
+      ? `${dateParts.hour}`
+      : `${dateParts.hour}:${dateParts.minute}`;
+  return formattedDate;
+};

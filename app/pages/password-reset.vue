@@ -25,6 +25,7 @@ definePageMeta({
   title: "Reset hasła",
   description: "Reset hasła",
   middleware: ["auth"],
+  colorMode: 'dark'
 })
 
 const { user } = useUserSession()

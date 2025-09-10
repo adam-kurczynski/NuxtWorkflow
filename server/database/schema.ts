@@ -26,6 +26,7 @@ export const projects = sqliteTable("projects", {
   clientId: integer("client_id"),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
   status: text("status").notNull(),
+  notes: text("notes")
 });
 
 export const assets = sqliteTable("assets", {

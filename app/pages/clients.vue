@@ -34,6 +34,7 @@ definePageMeta({
   title: "Klienci",
   description: "Klienci",
   middleware: ["auth"],
+  colorMode: 'dark'
 })
 
 const isOpen = ref(false);

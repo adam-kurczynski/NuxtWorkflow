@@ -5,7 +5,8 @@ export default eventHandler(async (event) => {
     throw new Error('Unauthorized')
   }
   
-  const { name, description, clientId, status } = await readBody(event)
+  const { name, description, clientId, status, notes } = await readBody(event)
+
 
   const project = await useDrizzle().insert(tables.projects).values({
     name: name,
@@ -13,6 +14,7 @@ export default eventHandler(async (event) => {
     clientId: clientId,
     createdAt: new Date(),
     status: status,
+    notes: notes,
   }).returning().get()
 
   return project

@@ -31,6 +31,7 @@ definePageMeta({
   title: 'Urlopy',
   description: 'Lista uropów',
   middleware: 'auth',
+  colorMode: 'dark'
 })  
 
 const userId = ref(0)

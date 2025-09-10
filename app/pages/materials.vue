@@ -39,7 +39,11 @@ definePageMeta({
   title: "Spis materiałów",
   description: "Spis materiałów",
   middleware: ["auth"],
+  colorMode: 'dark'
 })
+
+const appConfig = useAppConfig()
+console.log(appConfig)
 
 
 const { isOpen, state, schema, onSubmit, materials, searchString, editMaterial, currentMaterialId } = useMaterial();

@@ -33,7 +33,8 @@ definePageMeta({
   title: "Login",
   description: "Login page",
   name: "login",
-  layout: "blank"
+  layout: "blank",
+  colorMode: 'dark'
 })
 
 const { user, fetch: refreshSession } = useUserSession();

@@ -1,9 +1,22 @@
+import { config } from "./server/database/schema";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ui: {
     notifications: {
       position: 'top-0',
-    }
+    },
+    theme: {
+      colors: [
+        'primary',
+        'secondary',
+        'tertiary',
+        'info',
+        'success',
+        'warning',
+        'error'
+      ]
+    },
   },
   compatibilityDate: '2024-07-30',
   // Nuxt 4 directory structure and features

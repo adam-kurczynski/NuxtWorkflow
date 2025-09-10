@@ -103,6 +103,7 @@ export type ProjectResponse = {
         clientId: number;
         createdAt: Date;
         status: string;
+        notes: string
     };
     clients: {
         id: number;

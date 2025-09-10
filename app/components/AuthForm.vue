@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="submit" class="auth__form">
-    <h1 class="auth__heading">{{title}}</h1>
+    <h1 class="auth__heading">{{ title }}</h1>
     <div class="auth__div">
       <label for="username" class="form__label">Username</label>
       <input
@@ -15,17 +15,17 @@
     <div class="auth__div">
       <label for="password" class="form__label">Password</label>
       <input
+        id="password"
+        v-model="password"
         type="password"
         name="password"
-        id="password"
         required
-        v-model="password"
         class="form__input"
       />
     </div>
     <button class="form__button" :disabled="loading">
       <template v-if="loading">please wait...</template>
-      <template v-else>{{title}}</template>
+      <template v-else>{{ title }}</template>
     </button>
   </form>
 </template>

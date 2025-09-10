@@ -1,9 +1,26 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+:root {
+  --ui-primary: oklch(0.985 0 0);
+  --ui-secondary: oklch(0.95 0.0058 264.53);
+  --ui-bg: oklch(0.145 0 0);
+  --ui-border: oklch(0.269 0 0);
+}
+
+[class*="border"] {
+  border-color: oklch(0.269 0 0);
+}
+
+.vc-weekday.vc-weekday-7,
+.vc-weekday.vc-weekday-1 {
+  color: var(--color-pink-500);
+}
+
 input {
   font-size: 16px !important;
   width: 100%;
-} 
+}
 .vc-container {
   width: 100% !important;
 }

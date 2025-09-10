@@ -49,6 +49,7 @@ definePageMeta({
   title: "Pracownicy",
   description: "Pracownicy",
   middleware: ["auth"],
+  colorMode: 'dark'
 })
 
 
