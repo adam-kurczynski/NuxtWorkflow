@@ -1,6 +1,7 @@
 export default (date: Date, time: string) => {
   const [hours, minutes] = time.split(':')
-  date.setHours(Number(hours))
-  date.setMinutes(Number(minutes))
-  return new Date(date)
+  const newDate = new Date(date)
+  newDate.setHours(Number(hours), Number(minutes), 0, 0)
+  return newDate
 }
+

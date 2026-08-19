@@ -2,25 +2,212 @@
 @import "@nuxt/ui";
 
 :root {
-  --ui-primary: oklch(0.985 0 0);
-  --ui-secondary: oklch(0.95 0.0058 264.53);
-  --ui-bg: oklch(0.145 0 0);
-  --ui-border: oklch(0.269 0 0);
+  --ui-primary: #10b981;
+  --ui-primary-hover: #059669;
+  --ui-bg: #09090b;
+  --ui-bg-elevated: #18181b;
+  --ui-border: #27272a;
 }
 
-[class*="border"] {
-  border-color: oklch(0.269 0 0);
+body {
+  background-color: #09090b;
+  color: #f4f4f5;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Polished high-contrast VCalendar dark theme */
+.vc-container {
+  --vc-bg: #121215;
+  --vc-border: #27272a;
+  --vc-header-color: #f4f4f5;
+  --vc-weekday-color: #a1a1aa;
+  width: 100% !important;
+  border: 1px solid #27272a !important;
+  background-color: #121215 !important;
+  color: #f4f4f5 !important;
+  border-radius: 0.875rem !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4) !important;
+  font-family: inherit !important;
+}
+
+.vc-pane-container,
+.vc-pane,
+.vc-weeks {
+  background-color: transparent !important;
+}
+
+.vc-header {
+  padding-top: 14px !important;
+  padding-bottom: 32px !important;
+}
+
+.vc-title {
+  font-weight: 700 !important;
+  color: #f4f4f5 !important;
+  font-size: 1.05rem !important;
+  background-color: transparent !important;
+}
+
+.vc-title:hover {
+  color: #10b981 !important;
+}
+
+.vc-arrow {
+  color: #d4d4d8 !important;
+  background-color: transparent !important;
+  border-radius: 0.5rem !important;
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.vc-arrow:hover {
+  background-color: #27272a !important;
+  color: #ffffff !important;
+}
+
+.vc-weekday {
+  color: #a1a1aa !important;
+  font-weight: 600 !important;
+  font-size: 0.75rem !important;
+  text-transform: uppercase;
+  padding-bottom: 8px !important;
 }
 
 .vc-weekday.vc-weekday-7,
 .vc-weekday.vc-weekday-1 {
-  color: var(--color-pink-500);
+  color: #fb7185 !important; /* Rose weekend highlight */
+  font-weight: 700 !important;
+}
+
+.vc-day {
+  min-height: 44px !important;
+}
+
+.vc-day-content {
+  color: #f4f4f5 !important;
+  font-weight: 500 !important;
+  font-size: 0.925rem !important;
+  transition: all 0.15s ease !important;
+  border-radius: 0.5rem !important;
+}
+
+.vc-day-content:hover {
+  background-color: #27272a !important;
+  color: #ffffff !important;
+}
+
+.vc-day-content:focus {
+  background-color: #27272a !important;
+  box-shadow: 0 0 0 2px #10b981 !important;
+}
+
+/* Day not in current month */
+.vc-day.is-not-in-month .vc-day-content {
+  color: #71717a !important;
+  opacity: 0.45 !important;
+}
+
+/* Selected day / today highlight */
+.vc-day.is-today .vc-day-content {
+  border: 1px solid #10b981 !important;
+  color: #10b981 !important;
+  font-weight: 700 !important;
+}
+
+.vc-highlight {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+  border-radius: 0.5rem !important;
+}
+
+/* Dots under dates */
+.vc-dots {
+  gap: 3px !important;
+  margin-bottom: 3px !important;
+}
+
+.vc-dot {
+  width: 5px !important;
+  height: 5px !important;
+  border-radius: 9999px !important;
+  background-color: #10b981 !important;
+}
+
+.vc-dot.vc-dot-yellow {
+  background-color: #f59e0b !important;
+}
+
+/* Popover tooltip */
+.vc-popover-content {
+  background: #18181b !important;
+  color: #f4f4f5 !important;
+  border: 1px solid #27272a !important;
+  border-radius: 0.625rem !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
+  padding: 8px 12px !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+}
+
+.vc-popover-caret {
+  border-top-color: #18181b !important;
+}
+
+/* Month/Year Navigation Popover */
+.vc-nav-container {
+  background-color: #121215 !important;
+  border: 1px solid #27272a !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
+}
+
+.vc-nav-header {
+  color: #f4f4f5 !important;
+}
+
+.vc-nav-title {
+  color: #f4f4f5 !important;
+  font-weight: 700 !important;
+}
+
+.vc-nav-arrow {
+  color: #d4d4d8 !important;
+}
+
+.vc-nav-item {
+  color: #d4d4d8 !important;
+  font-weight: 500 !important;
+  border-radius: 0.375rem !important;
+}
+
+.vc-nav-item:hover {
+  background-color: #27272a !important;
+  color: #ffffff !important;
+}
+
+.vc-nav-item.is-active {
+  background-color: #10b981 !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
 }
 
 input {
-  font-size: 16px !important;
+  font-size: 15px !important;
   width: 100%;
-}
-.vc-container {
-  width: 100% !important;
 }

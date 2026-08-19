@@ -1,34 +1,53 @@
 <template>
-  <UCard>
-    <h1>
-      {{ `${isAdmin ? "Ostatnia aktywność" : "Twoja ostatnia aktywność"}` }}
-    </h1>
-    <p class="text text-stone-400 text-sm pb-4">
-      {{ `${isAdmin ? "Ostatnie wpisy wszystkich pracowników" : ""}` }}
-    </p>
-    <ul class="flex gap-2 flex-col">
+  <div class="rounded-xl border border-zinc-800/80 bg-zinc-900/40 p-5 backdrop-blur">
+    <div class="flex items-center justify-between pb-4 border-b border-zinc-800/70 mb-4">
+      <div class="flex items-center gap-2.5">
+        <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+        <div>
+          <h2 class="text-base font-bold text-zinc-100">
+            {{ isAdmin ? "Ostatnia aktywność" : "Twoja ostatnia aktywność" }}
+          </h2>
+          <p v-if="isAdmin" class="text-xs text-zinc-400">
+            Ostatnie zarejestrowane godziny wszystkich pracowników
+          </p>
+        </div>
+      </div>
+      <UIcon name="i-material-symbols-history-rounded" class="text-zinc-400 text-lg" />
+    </div>
+
+    <ul v-if="latestTimesheets && latestTimesheets.length" class="flex flex-col gap-2.5">
       <li
         v-for="(timesheet, index) in latestTimesheets"
         :key="index"
-        class="flex justify-between bg-stone-900 p-2 gap-1 flex-col rounded-md"
+        class="group flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-zinc-900/60 border border-zinc-800/50 hover:border-zinc-700 hover:bg-zinc-800/40 transition-all gap-2"
       >
-        <p>
-          {{ timesheet.projects?.name }}
-        </p>
-        <div class="flex gap-4 items-center justify-between">
-          <p class="text-sm">
-            {{ formatDate(timesheet.user_timelog.startTime) }}
-          </p>
-          <p class="text-sm">
-            {{ parseDecimalToTime(countLoggedTime(timesheet)) }}
-          </p>
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs shrink-0">
+            <UIcon name="i-material-symbols-schedule-rounded" />
+          </div>
+          <div class="flex flex-col">
+            <span class="font-medium text-sm text-zinc-200 group-hover:text-emerald-300 transition-colors">
+              {{ timesheet.projects?.name || "Brak projektu" }}
+            </span>
+            <span v-if="isAdmin && timesheet.users?.name" class="text-xs text-zinc-400">
+              {{ timesheet.users.name }}
+            </span>
+          </div>
         </div>
-        <p class="flex justify-end text-stone-400 text-sm">
-          {{ formatDate(timesheet.user_timelog.createdAt) }}
-        </p>
+
+        <div class="flex items-center justify-between sm:justify-end gap-4 text-xs pl-10 sm:pl-0">
+          <span class="text-zinc-400">{{ formatDate(timesheet.user_timelog.startTime) }}</span>
+          <span class="font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded text-xs font-mono">
+            {{ parseDecimalToTime(countLoggedTime(timesheet)) }}
+          </span>
+        </div>
       </li>
     </ul>
-  </UCard>
+
+    <div v-else class="text-center py-6 text-sm text-zinc-400">
+      Brak ostatniej aktywności do wyświetlenia
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -38,8 +57,8 @@ import formatDate from "~~/utils/formatDate";
 import getFirstAndLastDay from "~~/utils/getFirstAndLastDay";
 import countLoggedTime from "~~/utils/countLoggedTime";
 
-const { lastDay } = getFirstAndLastDay(new Date());
-const lastDayOfMonth = lastDay.split("T")[0];
+const { lastDayFormatted } = getFirstAndLastDay(new Date());
+const lastDayOfMonth = lastDayFormatted;
 const { user } = useUserSession();
 const isAdmin = user.value?.role === "admin";
 

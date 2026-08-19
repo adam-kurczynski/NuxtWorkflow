@@ -20,8 +20,16 @@ export default eventHandler(async (event) => {
     throw new Error("Please provide a start and end time");
   }
 
-  const startDateTime = new Date(startTime);
-  const endDateTime = new Date(endTime);
+  let startDateTime = new Date(startTime);
+  let endDateTime = new Date(endTime);
+
+  if (typeof startTime === "string" && /^\d{4}-\d{2}-\d{2}$/.test(startTime)) {
+    startDateTime = new Date(`${startTime}T00:00:00`);
+  }
+  if (typeof endTime === "string" && /^\d{4}-\d{2}-\d{2}$/.test(endTime)) {
+    endDateTime = new Date(`${endTime}T23:59:59.999`);
+  }
+
   const userIdParam = parseInt(userId);
   const projectIdParam = parseInt(projectId);
   const limitParam = parseInt(limit) || 10000;
@@ -41,7 +49,7 @@ export default eventHandler(async (event) => {
           between(tables.userTimelog.startTime, startDateTime, endDateTime)
         )
       )
-      .orderBy(desc(tables.userTimelog.createdAt))
+      .orderBy(desc(tables.userTimelog.endTime))
       .limit(limitParam);
     return timesheets;
   }
@@ -61,7 +69,7 @@ export default eventHandler(async (event) => {
           between(tables.userTimelog.startTime, startDateTime, endDateTime)
         )
       )
-      .orderBy(desc(tables.userTimelog.createdAt))
+      .orderBy(desc(tables.userTimelog.endTime))
       .limit(limitParam);
     return timesheets;
   }
@@ -82,7 +90,7 @@ export default eventHandler(async (event) => {
           between(tables.userTimelog.startTime, startDateTime, endDateTime)
         )
       )
-      .orderBy(desc(tables.userTimelog.createdAt))
+      .orderBy(desc(tables.userTimelog.endTime))
       .limit(limitParam);
     return timesheets;
   }
@@ -97,7 +105,7 @@ export default eventHandler(async (event) => {
       )
       .leftJoin(tables.users, eq(tables.userTimelog.userId, tables.users.id))
       .where(between(tables.userTimelog.startTime, startDateTime, endDateTime))
-      .orderBy(desc(tables.userTimelog.createdAt))
+      .orderBy(desc(tables.userTimelog.endTime))
       .limit(limitParam);
     return timesheets;
   }

@@ -1,19 +1,23 @@
 <template>
-  <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
-    <UFormField label="Email" name="email">
-      <UInput type="email" v-model="state.email" class="w-full" />
-    </UFormField>
-    <UFormField label="Aktualne hasło" name="oldPassword">
-      <UInput type="password" v-model="state.oldPassword" class="w-full" />
-    </UFormField>
-    <UFormField label="Nowe hasło" name="newPassword">
-      <UInput type="password" v-model="state.newPassword" class="w-full" />
-    </UFormField>
-    <UFormField label="Powtórz nowe hasło" name="confirmPassword">
-      <UInput type="password" v-model="state.confirmPassword" class="w-full" />
-    </UFormField>
-    <UButton class="w-full flex justify-center" type="submit">Zmień hasło</UButton>
-  </UForm>
+  <div class="max-w-lg w-full">
+    <UCard>
+      <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
+        <UFormField label="Email" name="email" required>
+          <UInput type="email" v-model="state.email" class="w-full" />
+        </UFormField>
+        <UFormField label="Aktualne hasło" name="oldPassword" required>
+          <UInput type="password" v-model="state.oldPassword" class="w-full" />
+        </UFormField>
+        <UFormField label="Nowe hasło" name="newPassword" required>
+          <UInput type="password" v-model="state.newPassword" class="w-full" />
+        </UFormField>
+        <UFormField label="Powtórz nowe hasło" name="confirmPassword" required>
+          <UInput type="password" v-model="state.confirmPassword" class="w-full" />
+        </UFormField>
+        <UButton class="w-full flex justify-center mt-2" type="submit">Zmień hasło</UButton>
+      </UForm>
+    </UCard>
+  </div>
 </template>
 
 <script lang="ts" setup>

@@ -1,5 +1,5 @@
-import { SQL } from "drizzle-orm";
-import { SQLitePreparedQuery } from "drizzle-orm/sqlite-core";
+import { and, eq, lte, gte } from "drizzle-orm";
+
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
   if (!user) {
@@ -10,37 +10,38 @@ export default defineEventHandler(async (event) => {
     userId,
     startTime,
     endTime,
-  }: { userId: string; startTime: string; endTime: string } = await readBody(
+  }: { userId: string | number; startTime: string | Date; endTime: string | Date } = await readBody(
     event
   );
 
+  let startDate = new Date(startTime);
+  let endDate = new Date(endTime);
+
+  if (typeof startTime === "string" && /^\d{4}-\d{2}-\d{2}$/.test(startTime)) {
+    startDate = new Date(`${startTime}T00:00:00`);
+  }
+  if (typeof endTime === "string" && /^\d{4}-\d{2}-\d{2}$/.test(endTime)) {
+    endDate = new Date(`${endTime}T23:59:59.999`);
+  }
+
   const params = {
-    userId: parseInt(userId),
-    startTime: new Date(startTime),
-    endTime: new Date(endTime),
+    userId: typeof userId === "number" ? userId : parseInt(userId),
+    startTime: startDate,
+    endTime: endDate,
   };
-
-  params.endTime.setHours(23, 59, 59, 999);
-  params.startTime.setHours(0, 0, 0, 0);
-
-  const filters: SQL[] = [];
-  if (params.userId) {
-    filters.push(eq(tables.timeOff.userId, params.userId));
-  }
-  if (params.startTime && params.endTime) {
-    filters.push(
-      or(
-        between(tables.timeOff.startTime, params.startTime, params.endTime),
-        between(tables.timeOff.endTime, params.startTime, params.endTime)
-      )
-    );
-  }
 
   const collision = await useDrizzle()
     .select()
     .from(tables.timeOff)
-    .where(and(...filters))
+    .where(
+      and(
+        eq(tables.timeOff.userId, params.userId),
+        lte(tables.timeOff.startTime, params.endTime),
+        gte(tables.timeOff.endTime, params.startTime)
+      )
+    )
     .get();
+
   if (collision) {
     throw createError({
       statusCode: 400,

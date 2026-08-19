@@ -1,29 +1,33 @@
 <template>
-  <div class="flex justify-center items-center h-screen flex-col w-full p-4">
-    <h1 class="text-4xl font-bold p-10">Workflow</h1>
-    <UCard class="w-full p-4 flex justify-center bg-black/10">
-      <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormField label="Username" name="username">
-          <UInput v-model="state.username" class="w-full" />
-        </UFormField>
+  <div class="flex justify-center items-center min-h-screen flex-col w-full p-4 bg-stone-950">
+    <div class="max-w-md w-full flex flex-col items-center">
+      <div class="flex items-center gap-2 mb-6">
+        <UIcon name="i-material-symbols-grid-view-rounded" class="text-3xl text-primary" />
+        <h1 class="text-3xl font-bold tracking-tight text-stone-100">Workflow</h1>
+      </div>
+      <UCard class="w-full bg-stone-900 border-stone-800">
+        <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+          <UFormField label="Nazwa użytkownika" name="username">
+            <UInput v-model="state.username" class="w-full" />
+          </UFormField>
 
-        <UFormField label="Password" name="password">
-          <UInput v-model="state.password" :type="show ? 'text' : 'password'" :ui="{ trailing: 'pe-1' }" class="w-full">
-            <template #trailing>
-              <UButton color="neutral" variant="link" size="sm"
-                :icon="show ? 'i-material-symbols-visibility-off-outline-rounded' : 'i-material-symbols-visibility-outline-rounded'"
-                :aria-label="show ? 'Hide password' : 'Show password'" :aria-pressed="show" aria-controls="password"
-                @click="show = !show" />
-            </template>
-          </UInput>
-        </UFormField>
+          <UFormField label="Hasło" name="password">
+            <UInput v-model="state.password" :type="show ? 'text' : 'password'" :ui="{ trailing: 'pe-1' }" class="w-full">
+              <template #trailing>
+                <UButton color="neutral" variant="link" size="sm"
+                  :icon="show ? 'i-material-symbols-visibility-off-outline-rounded' : 'i-material-symbols-visibility-outline-rounded'"
+                  :aria-label="show ? 'Hide password' : 'Show password'" :aria-pressed="show" aria-controls="password"
+                  @click="show = !show" />
+              </template>
+            </UInput>
+          </UFormField>
 
-
-        <UButton type="submit" :loading="loading" class="w-full flex-row justify-center">
-          Login
-        </UButton>
-      </UForm>
-    </UCard>
+          <UButton type="submit" :loading="loading" class="w-full flex-row justify-center mt-2">
+            Zaloguj się
+          </UButton>
+        </UForm>
+      </UCard>
+    </div>
   </div>
 </template>
 
