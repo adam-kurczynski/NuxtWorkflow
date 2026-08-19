@@ -1,0 +1,61 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nuxt-workflow",
+  "main": "./.output/server/index.mjs",
+  "compatibility_date": "2026-08-19",
+  "assets": {
+    "directory": "./.output/public/",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "r2_buckets": [
+    {
+      "binding": "BLOB",
+      "bucket_name": "nuxt-workflow"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "CACHE",
+      "id": "e85bd577b8484ca697fc7db0ef3e0487"
+    },
+    {
+      "binding": "KV",
+      "id": "0aa6518addb7401ebd680e1bcc68a310"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_id": "3ee5873b-dd6d-4463-b394-e0b7b9fd101b"
+    }
+  ],
+  "env": {
+    "preview": {
+      "r2_buckets": [
+        {
+          "binding": "BLOB",
+          "bucket_name": "nuxt-workflow-preview"
+        }
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "CACHE",
+          "id": "ac19674bbbb94e099e4b54b978a89c69"
+        },
+        {
+          "binding": "KV",
+          "id": "5cdf74df5d214be4bfc474d3e7d0d793"
+        }
+      ],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_id": "4da1be52-9b19-4ebe-933c-24efcd0848b5"
+        }
+      ]
+    }
+  }
+}

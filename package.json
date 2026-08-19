@@ -17,7 +17,7 @@
     "@nuxt/eslint": "^0.7.5",
     "@nuxt/icon": "1.10.3",
     "@nuxt/ui": "^3.0.1",
-    "@nuxthub/core": "^0.8.18",
+    "@nuxthub/core": "^0.10.8",
     "@nuxtjs/color-mode": "3.5.2",
     "@nuxtjs/toast": "^3.3.1",
     "@popperjs/core": "^2.11.8",
