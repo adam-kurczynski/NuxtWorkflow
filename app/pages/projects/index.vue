@@ -1,58 +1,66 @@
 <template>
-  <div>
-    <div class="flex justify-end items-center absolute top-20 right-4 gap-4">
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
+      <UInput v-model="search" placeholder="Szukaj projektu..." class="flex-1" icon="i-material-symbols-search" />
       <UButton
-        class="mb-4"
         icon="i-material-symbols-add-2"
+        class="shrink-0 justify-center"
         @click="isOpen = true"
       >
         Dodaj projekt
       </UButton>
     </div>
-    <UInput v-model="search" placeholder="Szukaj" class="w-full" />
-    <div v-if="projects" class="flex flex-col mt-4">
+
+    <div v-if="projects && projects.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <UCard
         v-for="projectData in projects"
         :key="projectData.projects.id"
-        class="mb-4 relative"
+        class="flex flex-col justify-between h-full hover:border-stone-700 transition-colors"
       >
-        <div class="flex flex-col">
-          <div class="flex flex-col gap-1">
-            <div class="flex justify-between items-center">
-              <h1 class="font-bold">{{ projectData.projects.name }}</h1>
-              <p class="text-xs text-stone-400">
+        <div class="flex flex-col h-full justify-between gap-3">
+          <div class="flex flex-col gap-1.5">
+            <div class="flex justify-between items-start gap-2">
+              <h1 class="font-bold text-base text-stone-100 leading-snug">{{ projectData.projects.name }}</h1>
+              <span class="text-xs text-stone-400 shrink-0">
                 {{ formatDate(projectData.projects.createdAt) }}
-              </p>
+              </span>
             </div>
-            <UBadge v-if="projectData.clients" class="w-fit">{{
+            <UBadge v-if="projectData.clients" class="w-fit" variant="subtle" color="primary">{{
               projectData.clients.name
             }}</UBadge>
-            <p class="text-sm text-stone-400">
+            <p v-if="projectData.projects.description" class="text-sm text-stone-400 line-clamp-2">
               {{ projectData.projects.description }}
             </p>
           </div>
-          <div class="flex justify-between mt-2 gap-2">
+          <div class="flex justify-between gap-2 pt-2 border-t border-stone-800/80">
             <UButton
               icon="i-material-symbols-edit"
               class="w-1/2 flex justify-center text-xs"
               variant="soft"
-              :ui="{ leadingIcon: 'size-4' }"
+              size="sm"
               @click="editProject(projectData.projects.id)"
-              >Edytuj</UButton
             >
+              Edytuj
+            </UButton>
             <UButton
               class="w-1/2 flex justify-center text-xs"
               variant="soft"
+              color="primary"
+              size="sm"
               icon="i-material-symbols-info"
-              :ui="{ leadingIcon: 'size-4' }"
               @click="navigateTo(`/projects/${projectData.projects.id}`)"
             >
-              Szczegóły</UButton
-            >
+              Szczegóły
+            </UButton>
           </div>
         </div>
       </UCard>
     </div>
+
+    <UCard v-else-if="projects" class="text-center py-8 border-dashed border-stone-800">
+      <p class="text-stone-400 text-sm">Nie znaleziono żadnych projektów</p>
+    </UCard>
+
     <UModal
       v-model:open="isOpen"
       :title="currentProjectId ? 'Edytuj projekt' : 'Dodaj projekt'"

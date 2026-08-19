@@ -25,8 +25,11 @@ export const useTimeOff = (onSuccessfulSubmit: Function) => {
     event.preventDefault();
     if (user.value === null) return;
     const { startTime, endTime } = event.data;
-    const startDate = new Date(startTime);
-    const endDate = new Date(endTime);
+    const [sYear, sMonth, sDay] = startTime.split("-").map(Number);
+    const [eYear, eMonth, eDay] = endTime.split("-").map(Number);
+
+    const startDate = new Date(sYear, sMonth - 1, sDay, 0, 0, 0, 0);
+    const endDate = new Date(eYear, eMonth - 1, eDay, 23, 59, 59, 999);
     if (startDate > endDate) {
       toast.add({
         title: "Data zakończenia musi być późniejsza niż data rozpoczęcia",
@@ -49,10 +52,10 @@ export const useTimeOff = (onSuccessfulSubmit: Function) => {
       });
       isOpen.value = false;
       onSuccessfulSubmit();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       toast.add({
-        title: error.statusMessage || "Nie udało się dodać urlopu",
+        title: error?.statusMessage || "Nie udało się dodać urlopu",
         color: "error",
       });
     }
