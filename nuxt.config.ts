@@ -1,4 +1,4 @@
-import { config } from "./server/database/schema";
+import { config } from "./server/db/schema";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -39,10 +39,10 @@ export default defineNuxtConfig({
     exposeConfig: true,
   },
   hub: {
-    database: true,
     kv: true,
     blob: true,
     cache: true,
+    db: 'sqlite'
   },
   nitro: {
     preset: "cloudflare_module",
