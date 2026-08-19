@@ -1,3 +1,4 @@
+import { kv } from '@nuxthub/kv'
 export default eventHandler(async () => {
-  return (await hubKV().get('redirects') || {})
+  return (await kv.get('redirects') || {})
 })

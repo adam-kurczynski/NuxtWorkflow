@@ -1,5 +1,5 @@
 import {gte, lte} from 'drizzle-orm'
-import { timeOff } from '~~/server/database/schema'
+import { timeOff } from '~~/server/db/schema'
 export default eventHandler(async (event) => {
   const { user } = await requireUserSession(event)
   if (!user) {
