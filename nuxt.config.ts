@@ -44,11 +44,13 @@ export default defineNuxtConfig({
     cache: true,
     db: 'sqlite'
   },
-  nitro: {
-    preset: "cloudflare_module",
-    cloudflare: {
-      deployConfig: true,
-      nodeCompat: true
+  $production: {
+    nitro: {
+      preset: "cloudflare_module",
+      cloudflare: {
+        deployConfig: true,
+        nodeCompat: true
+      }
     }
   },
   // Development
