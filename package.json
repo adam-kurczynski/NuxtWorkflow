@@ -11,9 +11,11 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "nuxt typecheck",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.4",
     "@nuxt/eslint": "^0.7.5",
     "@nuxt/icon": "1.10.3",
     "@nuxt/ui": "^3.0.1",
@@ -23,7 +25,7 @@
     "@popperjs/core": "^2.11.8",
     "@samk-dev/nuxt-vcalendar": "1.0.4",
     "bcrypt-ts": "^5.0.3",
-    "drizzle-orm": "^0.39.0",
+    "drizzle-orm": "^0.39.3",
     "exceljs": "^4.4.0",
     "nuxt": "^3.16.1",
     "nuxt-auth-utils": "0.5.17",
@@ -36,7 +38,7 @@
   "devDependencies": {
     "@iconify-json/material-symbols": "^1.2.14",
     "@nuxt/eslint-config": "^0.7.5",
-    "drizzle-kit": "^0.30.3",
+    "drizzle-kit": "^0.30.5",
     "eslint": "^9.18.0",
     "husky": "^9.1.7",
     "sass-embedded": "^1.83.4",

@@ -1,4 +1,4 @@
-import { config } from "./server/database/schema";
+import { config } from "./server/db/schema";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -18,7 +18,7 @@ export default defineNuxtConfig({
       ]
     },
   },
-  compatibilityDate: '2024-07-30',
+    compatibilityDate: "2026-08-19",
   // Nuxt 4 directory structure and features
   // https://nuxt.com/docs/getting-started/upgrade#testing-nuxt-4
   future: { compatibilityVersion: 4 },
@@ -39,15 +39,18 @@ export default defineNuxtConfig({
     exposeConfig: true,
   },
   hub: {
-    database: true,
     kv: true,
     blob: true,
     cache: true,
+    db: 'sqlite'
   },
-  nitro: {
-    experimental: {
-      // Enable Server API documentation within NuxtHub
-      openAPI: true
+  $production: {
+    nitro: {
+      preset: "cloudflare_module",
+      cloudflare: {
+        deployConfig: true,
+        nodeCompat: true
+      }
     }
   },
   // Development
